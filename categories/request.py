@@ -1,35 +1,35 @@
 import sqlite3
 import json
-from models import Tag
+from models import Category
 
-def get_all_tags():
+def get_all_categories():
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
         db_cursor.execute("""
         SELECT
-            t.id,
-            t.label
-        FROM Tags t
+            c.id,
+            c.label
+        FROM Categories c
         ORDER by label
         """)
-        tags = []
+        categories = []
         dataset = db_cursor.fetchall()
         for row in dataset :
-            tag = Tag(row['id'], row['label'])
-            tags.append(tag.__dict__)
-    return json.dumps(tags) 
+            category = Category(row['id'], row['label'])
+            categories.append(category.__dict__)
+    return json.dumps(categories)
 
-def create_tag(new_tag):
+def create_category(new_category):
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
         db_cursor.execute("""
-        INSERT INTO Tags
+        INSERT INTO Categories
             (label)
         VALUES
             (?)
-        """, (new_tag['label'],))
+        """, (new_category['label'],))
         id = db_cursor.lastrowid
-        new_tag['id'] = id
-    return json.dumps(new_tag) 
+        new_category['id'] = id
+    return json.dumps(new_category)
 
