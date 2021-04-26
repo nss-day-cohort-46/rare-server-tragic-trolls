@@ -29,7 +29,7 @@ def get_all_comments():
     
   return json.dumps(comments)
 
-def create_comment(post_id, new_comment):
+def create_comment(new_comment):
   with sqlite3.connect('./rare.db') as conn:
     db_cursor = conn.cursor()
 
@@ -38,7 +38,7 @@ def create_comment(post_id, new_comment):
       (post_id, author_id, content, subject, created_on)
     VALUES
       (?, ?, ?, ?, ?)
-    """, (post_id, new_comment['author_id'], 
+    """, (new_comment['post_id'], new_comment['author_id'], 
           new_comment['content'], new_comment['subject'], 
           new_comment['created_on']))
 

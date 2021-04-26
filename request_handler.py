@@ -115,9 +115,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         # function next.
         if id:
             if resource == "posts":
-                    new_creation = add_reaction(id, post_body)
-            elif resource == "comments":
-                    new_creation = create_comment(id, post_body)
+                new_creation = add_reaction(id, post_body)
+        else: 
+            if resource == "comments":
+                new_creation = create_comment(post_body)
         # elif resource == "customers":
         #     new_creation = create_customer(post_body)
         # elif resource == "employees":
