@@ -80,3 +80,44 @@ def get_post_by_id(id):
                     single_post['approved'])
 
     return json.dumps(post.__dict__)
+
+def create_post(new_post):
+    new_post['approved'] = 1
+    if 'imageUrl' not in new_post:
+        new_post['imageUrl'] = ""
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Posts
+            ( user_id,
+                category_id,
+                title,
+                publication_date,
+                image_url,
+                content,
+                approved )
+        VALUES
+            ( ?, ?, ?, ?, ?, ?, ? );
+        """, (new_post['userId'], 
+                new_post['categoryId'],
+                new_post['title'],
+                new_post['publicationDate'], 
+                new_post['imageUrl'],
+                new_post['content'],
+                new_post['approved'], )
+        )
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+
+        # Add the `id` property to the animal dictionary that
+        # was sent by the client so that the client sees the
+        # primary key in the response.
+        new_post['approved'] = True
+        new_post['id'] = id
+
+
+    return new_post

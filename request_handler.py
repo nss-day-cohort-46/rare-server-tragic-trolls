@@ -1,7 +1,8 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from posts import (get_posts_by_user_id, 
-                    get_post_by_id)
+from posts import ( get_posts_by_user_id, 
+                    get_post_by_id, 
+                    create_post )
 
 
 # Here's a class. It inherits from another class.
@@ -135,8 +136,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new animal to the list. Don't worry about
         # the orange squiggle, you'll define the create_animal
         # function next.
-        if resource == "animals":
-            new_creation = create_animal(post_body)
+        if resource == "posts":
+            new_creation = create_post(post_body)
         # elif resource == "customers":
         #     new_creation = create_customer(post_body)
         # elif resource == "employees":
