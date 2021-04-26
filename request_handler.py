@@ -3,7 +3,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from posts import ( get_posts_by_user_id, 
                     get_post_by_id, 
                     create_post,
-                    get_all_posts )
+                    get_all_posts,
+                    delete_post )
 
 
 # Here's a class. It inherits from another class.
@@ -185,8 +186,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             delete_animal(id)
         elif resource == "customers":
             delete_customer(id)
-        elif resource == "locations":
-            delete_location(id)
+        elif resource == "posts":
+            delete_post(id)
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
