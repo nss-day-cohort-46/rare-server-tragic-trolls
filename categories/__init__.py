@@ -1,1 +1,1 @@
-from .request import get_all_categories
+from .request import get_all_categories, create_category
