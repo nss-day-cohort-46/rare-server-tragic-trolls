@@ -97,3 +97,19 @@ INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 
 
 
 DROP TABLE Posts
+
+SELECT
+    p.id,
+    p.user_id,
+    p.category_id,
+    p.title,
+    p.publication_date,
+    p.image_url,
+    p.content,
+    CASE [approved]
+    WHEN 1 then  'True'
+    WHEN 0 then 'False'
+    ELSE 'NA'
+    END AS [approved]
+FROM posts p
+WHERE p.user_id = 1

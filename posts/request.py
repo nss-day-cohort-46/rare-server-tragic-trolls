@@ -18,9 +18,13 @@ def get_posts_by_user_id(user_id):
             p.publication_date,
             p.image_url,
             p.content,
-            p.approved
+            CASE [approved]
+            WHEN 1 then  'True'
+            WHEN 0 then 'False'
+            ELSE 'NA'
+            END AS [approved]
         FROM posts p
-        WHERE p.status = ?
+        WHERE p.user_id = ?
         """, (user_id, ))
 
         posts = []
