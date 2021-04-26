@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from categories import get_all_categories, create_category
-from tags import create_tag
+from tags import create_tag, get_all_tags
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -77,11 +77,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_animal(id)
                 else:
                     response = get_all_categories()
-            elif resource == "customers":
+            elif resource == "tags":
                 if id is not None:
                     response = get_single_customer(id)
                 else:
-                    response = get_all_customers()
+                    response = get_all_tags()
             elif resource == "employees":
                 if id is not None:
                     response = get_single_employee(id)
