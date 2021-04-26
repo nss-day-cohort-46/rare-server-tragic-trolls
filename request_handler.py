@@ -72,11 +72,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         if len(parsed) == 2:
             ( resource, id ) = parsed
 
-            if resource == "animals":
+            if resource == "users":
                 if id is not None:
-                    response = get_single_animal(id)
+                    response = get_single_user(id)
                 else:
-                    response = get_all_animals()
+                    response = get_all_users()
             elif resource == "customers":
                 if id is not None:
                     response = get_single_customer(id)
