@@ -1,6 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from tags import get_all_tags, delete_tag
+from tags import get_all_tags, delete_tag, update_tag
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -158,8 +158,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         success = False
 
-        if resource == "animals":
-            success = update_animal(id, post_body)
+        if resource == "tags":
+            success = update_tag(id, post_body)
         # rest of the elif's
 
         if success:
