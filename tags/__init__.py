@@ -1,1 +1,1 @@
-from .request import get_all_tags
+from .request import get_all_tags, delete_tag
