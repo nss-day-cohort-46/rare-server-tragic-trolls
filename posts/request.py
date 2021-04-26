@@ -27,10 +27,6 @@ def get_all_posts():
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            if row['approved'] == 0:
-                row['approved'] = False
-            else:
-                row['approved'] = True
             post = Post(row['id'], 
                         row['user_id'], 
                         row['category_id'],
@@ -72,10 +68,6 @@ def get_posts_by_user_id(user_id):
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            if row['approved'] == 0:
-                row['approved'] = False
-            else:
-                row['approved'] = True
             post = Post(row['id'], 
                         row['user_id'], 
                         row['category_id'],
