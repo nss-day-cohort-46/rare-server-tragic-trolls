@@ -1,10 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from animals import get_all_animals, get_single_animal, delete_animal, update_animal, get_animals_by_location, get_animals_by_status, create_animal
-from customers import get_all_customers, get_single_customer, create_customer, delete_customer, update_customer, get_customers_by_email
-from employees import get_all_employees, get_single_employee, get_employees_by_location
-from locations import get_all_locations, get_single_location, delete_location, update_location
-
+from tags import get_all_tags
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -80,11 +76,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_animal(id)
                 else:
                     response = get_all_animals()
-            elif resource == "customers":
+            elif resource == "tags":
                 if id is not None:
                     response = get_single_customer(id)
                 else:
-                    response = get_all_customers()
+                    response = get_all_tags()
             elif resource == "employees":
                 if id is not None:
                     response = get_single_employee(id)
