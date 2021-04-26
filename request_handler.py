@@ -1,6 +1,9 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
+
 from tags import create_tag
+
+from categories import create_category
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -130,11 +133,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Initialize new animal
         new_creation = None
 
-        # Add a new animal to the list. Don't worry about
-        # the orange squiggle, you'll define the create_animal
-        # function next.
         if resource == "tags":
             new_creation = create_tag(post_body)
+        if resource == "categories":
+            new_creation = create_category(post_body)
+
         self.wfile.write(new_creation.encode())
 
     # Here's a method on the class that overrides the parent's method.
@@ -171,10 +174,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Delete a single animal from the list
         if resource == "animals":
             delete_animal(id)
-        elif resource == "customers":
-            delete_customer(id)
-        elif resource == "locations":
-            delete_location(id)
+
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
