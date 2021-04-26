@@ -1,7 +1,7 @@
 import sqlite3
 import json 
 
-def add_reaction(post_id, new_reaction):
+def add_reaction(new_reaction):
   with sqlite3.connect('./rare.db') as conn:
     db_cursor = conn.cursor()
 
@@ -10,7 +10,7 @@ def add_reaction(post_id, new_reaction):
       (user_id, reaction_id, post_id)
     VALUES
       (?, ?, ?)
-    """, (new_reaction['user_id'], new_reaction['reaction_id'], post_id))
+    """, (new_reaction['user_id'], new_reaction['reaction_id'], new_reaction['post_id']))
 
     id = db_cursor.lastrowid
 
