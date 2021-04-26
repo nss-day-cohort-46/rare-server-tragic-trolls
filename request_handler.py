@@ -1,10 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from animals import get_all_animals, get_single_animal, delete_animal, update_animal, get_animals_by_location, get_animals_by_status, create_animal
-from customers import get_all_customers, get_single_customer, create_customer, delete_customer, update_customer, get_customers_by_email
-from employees import get_all_employees, get_single_employee, get_employees_by_location
-from locations import get_all_locations, get_single_location, delete_location, update_location
-
+from comments import create_comment, get_all_comments
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -75,26 +71,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         if len(parsed) == 2:
             ( resource, id ) = parsed
 
-            if resource == "animals":
+            if resource == "comments":
                 if id is not None:
-                    response = get_single_animal(id)
+                    pass
                 else:
-                    response = get_all_animals()
-            elif resource == "customers":
-                if id is not None:
-                    response = get_single_customer(id)
-                else:
-                    response = get_all_customers()
-            elif resource == "employees":
-                if id is not None:
-                    response = get_single_employee(id)
-                else:
-                    response = get_all_employees()
-            elif resource == "locations":
-                if id is not None:
-                    response = get_single_location(id)
-                else:
-                    response = get_all_locations()
+                    response = get_all_comments()
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
@@ -106,14 +87,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             # query parameter that specified the customer
             # email as a filtering value?
             if key == "email" and resource == "customers":
-                response = get_customers_by_email(value)
-            elif key == "location_id" and resource == "animals":
-                response = get_animals_by_location(value)
-            elif key == "location_id" and resource == "employees":
-                response = get_employees_by_location(value)
-            elif key == "status" and resource == "animals":
-                response = get_animals_by_status(value)
-
+                pass
         self.wfile.write(response.encode())
 
     # Here's a method on the class that overrides the parent's method.
@@ -137,8 +111,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new animal to the list. Don't worry about
         # the orange squiggle, you'll define the create_animal
         # function next.
-        if resource == "animals":
-            new_creation = create_animal(post_body)
+        if resource == "comments":
+            new_creation = create_comment(post_body)
         # elif resource == "customers":
         #     new_creation = create_customer(post_body)
         # elif resource == "employees":
@@ -163,7 +137,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
 
         if resource == "animals":
-            success = update_animal(id, post_body)
+            pass
         # rest of the elif's
 
         if success:
@@ -182,11 +156,11 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Delete a single animal from the list
         if resource == "animals":
-            delete_animal(id)
+            pass
         elif resource == "customers":
-            delete_customer(id)
+            pass
         elif resource == "locations":
-            delete_location(id)
+            pass
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
