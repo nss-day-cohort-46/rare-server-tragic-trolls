@@ -11,6 +11,14 @@ CREATE TABLE "Users" (
   "active" bit
 );
 
+INSERT INTO Users
+  ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on')
+VALUES  
+  ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', 12/31/2020);
+
+DELETE FROM Users
+WHERE id = 2;
+
 CREATE TABLE "DemotionQueue" (
   "action" varchar,
   "admin_id" INTEGER,

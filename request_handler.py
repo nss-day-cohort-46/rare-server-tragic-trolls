@@ -144,7 +144,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         #     new_creation = create_location(post_body)
 
         # Encode the new animal and send in response
-        self.wfile.write(json.dumps(new_creation).encode())
+        self.wfile.write(new_creation.encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.
