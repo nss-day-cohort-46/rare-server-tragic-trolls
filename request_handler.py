@@ -1,4 +1,4 @@
-from comments.request import delete_comment
+from comments.request import delete_comment, update_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from comments import create_comment, get_all_comments
@@ -137,8 +137,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         success = False
 
-        if resource == "animals":
-            pass
+        if resource == "comments":
+            success = update_comment(id, post_body)
         # rest of the elif's
 
         if success:
