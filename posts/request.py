@@ -27,9 +27,14 @@ def get_posts_by_user_id(user_id):
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            post = Post(row['id'], row['user_id'], row['category_id'],
-                            row['title'], row['publication_date'],
-                            row['image_url'], row['content'], row['approved'])
+            post = Post(row['id'], 
+                        row['user_id'], 
+                        row['category_id'],
+                        row['title'], 
+                        row['publication_date'],
+                        row['image_url'], 
+                        row['content'], 
+                        row['approved'])
             posts.append(post.__dict__)
 
     return json.dumps(posts)
