@@ -1,6 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from posts import get_posts_by_user_id
+from posts import (get_posts_by_user_id, 
+                    get_post_by_id)
 
 
 # Here's a class. It inherits from another class.
@@ -87,11 +88,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_employee(id)
                 else:
                     response = get_all_employees()
-            elif resource == "locations":
+            elif resource == "posts":
                 if id is not None:
-                    response = get_single_location(id)
+                    response = get_post_by_id(id)
                 else:
-                    response = get_all_locations()
+                    response = get_all_posts()
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
