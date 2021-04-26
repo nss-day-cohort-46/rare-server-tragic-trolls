@@ -1,3 +1,4 @@
+from comments.request import delete_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from comments import create_comment, get_all_comments
@@ -155,12 +156,12 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url(self.path)
 
         # Delete a single animal from the list
-        if resource == "animals":
-            pass
-        elif resource == "customers":
-            pass
-        elif resource == "locations":
-            pass
+        if resource == "comments":
+            delete_comment(id)
+        # elif resource == "customers":
+        #     pass
+        # elif resource == "locations":
+        #     pass
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
