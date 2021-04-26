@@ -8,7 +8,8 @@ CREATE TABLE "Users" (
   "password" varchar,
   "profile_image_url" varchar,
   "created_on" date,
-  "active" bit
+  "active" bit,
+  "user_type" varchar
 );
 
 INSERT INTO Users
@@ -18,6 +19,8 @@ VALUES
 
 DELETE FROM Users
 WHERE id = 2;
+
+DROP Table Users;
 
 CREATE TABLE "DemotionQueue" (
   "action" varchar,
