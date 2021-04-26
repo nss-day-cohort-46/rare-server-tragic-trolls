@@ -92,3 +92,6 @@ INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.c
 INSERT INTO Users ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'profile_image_url', 'created_on', 'active') VALUES ('phil', 'phan', 'a@b.c', 'it me', 'philphan', 'password', 'https://pngtree.com/so/happy', '2020-01-01', 1);
 INSERT INTO Posts ('user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (1, 1, 'new post', '2021-01-01', 'https://pngtree.com/so/happy', 'testing post', 1)
 INSERT INTO comments ('post_id', 'author_id', 'content', 'subject', 'created_on') VALUES (1, 1, 'test', 'test', '2021-01-01')
+
+
+SELECT * FROM PostReactions

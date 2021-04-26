@@ -1,3 +1,4 @@
+from reactions.request import add_reaction
 from comments.request import delete_comment, update_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -112,8 +113,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new animal to the list. Don't worry about
         # the orange squiggle, you'll define the create_animal
         # function next.
-        if resource == "comments":
-            new_creation = create_comment(post_body)
+        if id:
+            if resource == "posts":
+                    new_creation = add_reaction(id, post_body)
+            elif resource == "comments":
+                    new_creation = create_comment(id, post_body)
         # elif resource == "customers":
         #     new_creation = create_customer(post_body)
         # elif resource == "employees":
