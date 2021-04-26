@@ -1,6 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from categories import get_all_categories, delete_category
+from categories import get_all_categories, delete_category, update_category
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -160,6 +160,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "animals":
             success = update_animal(id, post_body)
+        elif resource == "categories":
+            success = update_category(id, post_body)
         # rest of the elif's
 
         if success:
