@@ -19,3 +19,11 @@ def get_all_categories():
             category = Category(row['id'], row['label'])
             categories.append(category.__dict__)
     return json.dumps(categories)
+def delete_category(id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        DELETE FROM Categories
+        WHERE id = ?
+        """,(id,))

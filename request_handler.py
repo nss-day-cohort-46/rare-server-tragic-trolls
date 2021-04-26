@@ -1,6 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from categories import get_all_categories
+from categories import get_all_categories, delete_category
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -179,8 +179,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Delete a single animal from the list
         if resource == "animals":
             delete_animal(id)
-        elif resource == "customers":
-            delete_customer(id)
+        elif resource == "categories":
+            delete_category(id)
         elif resource == "locations":
             delete_location(id)
 
