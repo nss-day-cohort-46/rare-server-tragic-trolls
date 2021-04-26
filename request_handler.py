@@ -1,6 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from users import register_new_user
+from users import register_new_user, existing_user_check
 
 
 # Here's a class. It inherits from another class.
@@ -136,6 +136,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # function next.
         if resource == "users":
             new_creation = register_new_user(post_body)
+        if resource == "login":
+            new_creation = existing_user_check(post_body)
         # elif resource == "customers":
         #     new_creation = create_customer(post_body)
         # elif resource == "employees":
