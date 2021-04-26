@@ -111,9 +111,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new animal to the list. Don't worry about
         # the orange squiggle, you'll define the create_animal
         # function next.
-        if id:
-            if resource == "comments":
-                new_creation = create_comment(id, post_body)
+        if resource == "comments":
+            new_creation = create_comment(post_body)
         # elif resource == "customers":
         #     new_creation = create_customer(post_body)
         # elif resource == "employees":
