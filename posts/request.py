@@ -20,8 +20,7 @@ def get_all_posts():
             p.content,
             p.approved
         FROM posts p
-        WHERE p.user_id = ?
-        """, (user_id, ))
+        """)
 
         posts = []
         dataset = db_cursor.fetchall()

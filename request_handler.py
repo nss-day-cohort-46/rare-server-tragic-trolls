@@ -2,7 +2,8 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from posts import ( get_posts_by_user_id, 
                     get_post_by_id, 
-                    create_post )
+                    create_post,
+                    get_all_posts )
 
 
 # Here's a class. It inherits from another class.
