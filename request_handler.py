@@ -6,7 +6,9 @@ from posts import ( get_posts_by_user_id,
                     get_post_by_id, 
                     create_post,
                     get_all_posts,
-                    delete_post )
+                    delete_post,
+                    update_post,
+                    approve_post )
 from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check
 from categories import get_all_categories, create_category, delete_category, update_category
@@ -126,6 +128,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = update_comment(id, post_body)
         elif resource == "categories":
             success = update_category(id, post_body)
+        elif resource == "posts":
+            success = update_post(id, post_body)
+        # rest of the elif's
 
         if success:
             self._set_headers(204)
@@ -133,6 +138,24 @@ class HandleRequests(BaseHTTPRequestHandler):
             self._set_headers(404)
 
         self.wfile.write("".encode())
+
+    def do_PATCH(self):
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        success = False
+        if resource == "approve":
+            success = approve_post(id)
+        # rest of the elif's
+
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
 
     def do_DELETE(self):
         self._set_headers(204)
