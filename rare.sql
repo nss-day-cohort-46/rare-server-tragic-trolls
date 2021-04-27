@@ -8,8 +8,19 @@ CREATE TABLE "Users" (
   "password" varchar,
   "profile_image_url" varchar,
   "created_on" date,
-  "active" bit
+  "active" bit,
+  "user_type" varchar
 );
+
+INSERT INTO Users
+  ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on')
+VALUES  
+  ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', 12/31/2020);
+
+DELETE FROM Users
+WHERE id = 2;
+
+DROP Table Users;
 
 CREATE TABLE "DemotionQueue" (
   "action" varchar,
