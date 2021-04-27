@@ -1,3 +1,4 @@
+from reactions.request import add_reaction
 from comments.request import delete_comment, update_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -133,17 +134,22 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Initialize new animal
         new_creation = None
 
-        if resource == "posts":
+        # Add a new animal to the list. Don't worry about
+        # the orange squiggle, you'll define the create_animal
+        # function next.
+        if resource == "postreactions":
+            new_creation = add_reaction(post_body)
+        elif resource == "posts":
             new_creation = create_post(post_body)
-        if resource == "comments":
+        elif resource == "comments":
             new_creation = create_comment(post_body)
-        if resource == "users":
+        elif resource == "users":
             new_creation = register_new_user(post_body)
-        if resource == "login":
+        elif resource == "login":
             new_creation = existing_user_check(post_body)
-        if resource == "tags":
+        elif resource == "tags":
             new_creation = create_tag(post_body)
-        if resource == "categories":
+        elif resource == "categories":
             new_creation = create_category(post_body)
 
         self.wfile.write(new_creation.encode())
