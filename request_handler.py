@@ -91,11 +91,6 @@ class HandleRequests(BaseHTTPRequestHandler):
                     pass
                 else:
                     response = get_all_tags()
-            elif resource == "employees":
-                if id is not None:
-                    response = get_single_employee(id)
-                else:
-                    response = get_all_employees()
             elif resource == "posts":
                 if id is not None:
                     response = get_post_by_id(id)
@@ -116,13 +111,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             # Is the resource `customers` and was there a
             # query parameter that specified the customer
             # email as a filtering value?
-            if key == "email" and resource == "customers":
-                response = get_customers_by_email(value)
-            elif key == "location_id" and resource == "animals":
-                response = get_animals_by_location(value)
-            elif key == "location_id" and resource == "employees":
-                response = get_employees_by_location(value)
-            elif key == "userId" and resource == "posts":
+            if key == "userId" and resource == "posts":
                 response = get_posts_by_user_id(value)
         self.wfile.write(response.encode())
 
