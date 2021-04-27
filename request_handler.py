@@ -5,6 +5,10 @@ from posts import ( get_posts_by_user_id,
                     create_post,
                     get_all_posts,
                     delete_post )
+from users import register_new_user, existing_user_check
+from users import register_new_user
+from categories import get_all_categories, create_category
+from tags import create_tag, get_all_tags, delete_tag
 
 
 # Here's a class. It inherits from another class.
@@ -76,16 +80,16 @@ class HandleRequests(BaseHTTPRequestHandler):
         if len(parsed) == 2:
             ( resource, id ) = parsed
 
-            if resource == "animals":
+            if resource == "categories":
                 if id is not None:
                     response = get_single_animal(id)
                 else:
-                    response = get_all_animals()
-            elif resource == "customers":
+                    response = get_all_categories()
+            elif resource == "tags":
                 if id is not None:
                     response = get_single_customer(id)
                 else:
-                    response = get_all_customers()
+                    response = get_all_tags()
             elif resource == "employees":
                 if id is not None:
                     response = get_single_employee(id)
@@ -135,20 +139,18 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Initialize new animal
         new_creation = None
 
-        # Add a new animal to the list. Don't worry about
-        # the orange squiggle, you'll define the create_animal
-        # function next.
         if resource == "posts":
             new_creation = create_post(post_body)
-        # elif resource == "customers":
-        #     new_creation = create_customer(post_body)
-        # elif resource == "employees":
-        #     new_creation = create_employee(post_body)
-        # elif resource == "locations":
-        #     new_creation = create_location(post_body)
+        if resource == "users":
+            new_creation = register_new_user(post_body)
+        if resource == "login":
+            new_creation = existing_user_check(post_body)
+        if resource == "tags":
+            new_creation = create_tag(post_body)
+        if resource == "categories":
+            new_creation = create_category(post_body)
 
-        # Encode the new animal and send in response
-        self.wfile.write(json.dumps(new_creation).encode())
+        self.wfile.write(new_creation.encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.
@@ -181,13 +183,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
-        if resource == "animals":
-            delete_animal(id)
-        elif resource == "customers":
-            delete_customer(id)
-        elif resource == "posts":
+        if resource == "posts":
             delete_post(id)
+        elif resource == "tags":
+            delete_tag(id)
+
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
