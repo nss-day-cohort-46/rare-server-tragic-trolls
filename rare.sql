@@ -16,6 +16,10 @@ INSERT INTO Users
   ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on', 'active', 'is_admin')
 VALUES  
   ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, True);
+INSERT INTO Users
+  ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on', 'active', 'is_admin')
+VALUES  
+  ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, False);
 
 DELETE FROM Users
 WHERE id = 1;
