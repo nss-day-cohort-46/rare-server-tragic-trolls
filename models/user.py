@@ -8,22 +8,13 @@ class User():
         self.displayName = display_name
         self.username = user_name 
         self.email = email
-        self.password = self.__password
+        self.password = password
         self.bio = bio
         self.createdOn = created_on
-        self.active = active
+        self.active = bool(active)
         self.profileImageUrl = profile_image_url
-        self.isAdmin = is_admin
-
-    @property
-    def __password(self, password):
-        print("Password")
-        return password
+        self.isAdmin = bool(is_admin)
 
     @property
     def setFullName(self):
-        print("User Name")
         return f'{self.firstName} {self.lastName}'
-    
-    @property
-    def boolean
