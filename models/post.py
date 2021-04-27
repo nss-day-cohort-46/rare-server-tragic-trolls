@@ -9,3 +9,4 @@ class Post():
         self.imageUrl = image_url
         self.content = content
         self.approved = approved
+        self.tags = None
