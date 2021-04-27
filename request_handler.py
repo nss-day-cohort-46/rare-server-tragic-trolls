@@ -5,11 +5,11 @@ from posts import ( get_posts_by_user_id,
                     create_post,
                     get_all_posts,
                     delete_post )
+from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check
 from users import register_new_user
-from categories import get_all_categories, create_category
+from categories import get_all_categories, create_category, delete_category
 from tags import create_tag, get_all_tags, delete_tag
-
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -82,14 +82,15 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "categories":
                 if id is not None:
-                    response = get_single_animal(id)
+                    pass
                 else:
                     response = get_all_categories()
             elif resource == "tags":
                 if id is not None:
-                    response = get_single_customer(id)
+                    pass
                 else:
                     response = get_all_tags()
+<<<<<<< HEAD
             elif resource == "employees":
                 if id is not None:
                     response = get_single_employee(id)
@@ -100,6 +101,13 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_post_by_id(id)
                 else:
                     response = get_all_posts()
+=======
+            elif resource == "comments":
+                if id is not None:
+                    pass
+                else:
+                    response = get_all_comments()
+>>>>>>> main
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
@@ -111,6 +119,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             # query parameter that specified the customer
             # email as a filtering value?
             if key == "email" and resource == "customers":
+<<<<<<< HEAD
                 response = get_customers_by_email(value)
             elif key == "location_id" and resource == "animals":
                 response = get_animals_by_location(value)
@@ -119,6 +128,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             elif key == "userId" and resource == "posts":
                 response = get_posts_by_user_id(value)
 
+=======
+                pass
+>>>>>>> main
         self.wfile.write(response.encode())
 
     # Here's a method on the class that overrides the parent's method.
@@ -139,8 +151,13 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Initialize new animal
         new_creation = None
 
+<<<<<<< HEAD
         if resource == "posts":
             new_creation = create_post(post_body)
+=======
+        if resource == "comments":
+            new_creation = create_comment(post_body)
+>>>>>>> main
         if resource == "users":
             new_creation = register_new_user(post_body)
         if resource == "login":
@@ -166,7 +183,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
 
         if resource == "animals":
-            success = update_animal(id, post_body)
+            pass
         # rest of the elif's
 
         if success:
@@ -182,12 +199,18 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
+<<<<<<< HEAD
 
         if resource == "posts":
             delete_post(id)
         elif resource == "tags":
+=======
+        
+        if resource == "tags":
+>>>>>>> main
             delete_tag(id)
-
+        elif resource == "categories":
+            delete_category(id)
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
