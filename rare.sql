@@ -131,3 +131,10 @@ SELECT
     END AS [approved]
 FROM posts p
 WHERE p.user_id = 1
+
+SELECT
+    pt.id,
+    pt.post_id,
+    pt.tag_id
+FROM PostTags pt
+WHERE pt.post_id = 2

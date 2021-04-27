@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Post
+from models import Post, PostTag
 
 def get_all_posts():
 
@@ -38,6 +38,22 @@ def get_all_posts():
                 post.approved = False
             else:
                 post.approved = True
+            db_cursor.execute("""
+            SELECT
+                pt.id,
+                pt.post_id,
+                pt.tag_id
+            FROM PostTags pt
+            WHERE pt.post_id = ?
+            """, ( row['id'], ))
+            post_tags = []
+            tagdataset = db_cursor.fetchall()
+            for tag_row in tagdataset:
+                post_tag = PostTag(tag_row['id'], 
+                            tag_row['post_id'], 
+                            tag_row['tag_id'])
+                post_tags.append(post_tag.__dict__)
+            post.tags = post_tags
             posts.append(post.__dict__)
 
     return json.dumps(posts)
