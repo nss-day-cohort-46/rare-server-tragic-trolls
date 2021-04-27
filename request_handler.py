@@ -8,7 +8,7 @@ from posts import ( get_posts_by_user_id,
                     get_all_posts,
                     delete_post )
 from comments import create_comment, get_all_comments
-from users import register_new_user, existing_user_check, get_all_users, get_user_by_id
+from users import register_new_user, existing_user_check, get_all_users, get_user_by_id, deactivate_user
 from categories import get_all_categories, create_category, delete_category
 from tags import create_tag, get_all_tags, delete_tag
 
@@ -174,6 +174,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "comments":
             success = update_comment(id, post_body)
+        if resource == "deactivate":
+            success = deactivate_user(id)
         # rest of the elif's
 
         if success:

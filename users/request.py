@@ -64,7 +64,8 @@ def get_all_users():
             u.first_name,
             u.last_name,
             u.display_name,
-            u.is_admin
+            u.is_admin,
+            u.active
         FROM users u
         """)
 
@@ -81,7 +82,8 @@ def get_all_users():
                         email = None, 
                         bio = None, 
                         created_on = None, 
-                        is_admin = row["is_admin"])
+                        is_admin = row["is_admin"],
+                        active = row["active"])
 
             users.append(user.__dict__)
 
@@ -100,7 +102,8 @@ def get_user_by_id(id):
             u.display_name,
             u.email,
             u.created_on,
-            u.is_admin
+            u.is_admin,
+            u.active
         FROM Users u
         WHERE id = ?
         """, (id,))
@@ -116,6 +119,27 @@ def get_user_by_id(id):
                     bio = None, 
                     created_on = data["created_on"], 
                     is_admin = data["is_admin"],
-                    profile_image_url = data["profile_image_url"])
+                    profile_image_url = data["profile_image_url"],
+                    active = data["active"])
         
         return json.dumps(user.__dict__)
+
+def deactivate_user(id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(""" 
+        UPDATE Users
+        SET active = False
+        WHERE id = ?
+        """, (id,))
+
+        rows_affected = db_cursor.rowcount
+
+        success = False
+
+        if rows_affected > 0:
+            success = True
+        
+        return(success)
