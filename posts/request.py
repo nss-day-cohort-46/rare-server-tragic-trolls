@@ -153,14 +153,11 @@ def create_post(new_post):
             for tag_id in new_post['tagIds']:
                 db_cursor.execute("""
                 INSERT INTO PostTags
-                    ( post_id,
-                        tag_id )
+                    ( post_id, tag_id )
                 VALUES
                     ( ?, ? );
-                """, (id, 
-                        tag_id )
-
-    return new_post
+                """, (id, tag_id ))
+    return json.dumps(new_post)
 
 def delete_post(id):
     with sqlite3.connect("./rare.db") as conn:
