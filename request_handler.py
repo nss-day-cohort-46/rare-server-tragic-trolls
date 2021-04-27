@@ -11,7 +11,7 @@ from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check
 from users import register_new_user
 from categories import get_all_categories, create_category, delete_category
-from tags import create_tag, get_all_tags, delete_tag
+from tags import create_tag, get_all_tags, delete_tag, update_tag
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -166,8 +166,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url(self.path)
 
         success = False
-
-        if resource == "comments":
+        if resource == "tags":
+            success = update_tag(id, post_body)
+        elif resource == "comments":
             success = update_comment(id, post_body)
         # rest of the elif's
 
