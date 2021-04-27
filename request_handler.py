@@ -3,9 +3,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check
 from users import register_new_user
-from categories import get_all_categories, create_category
+from categories import get_all_categories, create_category, delete_category
 from tags import create_tag, get_all_tags, delete_tag
-
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -166,11 +165,11 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
-
-
+        
         if resource == "tags":
             delete_tag(id)
-
+        elif resource == "categories":
+            delete_category(id)
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
