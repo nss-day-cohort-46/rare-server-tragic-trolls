@@ -8,5 +8,5 @@ class Post():
         self.publicationDate = publication_date
         self.imageUrl = image_url
         self.content = content
-        self.approved = approved
+        self.approved = bool(approved)
         self.tags = None

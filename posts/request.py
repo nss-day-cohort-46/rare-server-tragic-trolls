@@ -34,10 +34,6 @@ def get_all_posts():
                         row['image_url'], 
                         row['content'], 
                         row['approved'])
-            if post.approved == 0:
-                post.approved = False
-            else:
-                post.approved = True
             db_cursor.execute("""
             SELECT
                 pt.id,
@@ -94,10 +90,6 @@ def get_posts_by_user_id(user_id):
                         row['image_url'], 
                         row['content'], 
                         row['approved'])
-            if post.approved == 0:
-                post.approved = False
-            else:
-                post.approved = True
             db_cursor.execute("""
             SELECT
                 pt.id,
@@ -151,10 +143,6 @@ def get_post_by_id(id):
                     single_post['image_url'], 
                     single_post['content'], 
                     single_post['approved'])
-        if post.approved == 0:
-            post.approved = False
-        else:
-            post.approved = True
         db_cursor.execute("""
         SELECT
             pt.id,
@@ -233,7 +221,7 @@ def update_post(id, put_body):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        UPDATE Post
+        UPDATE Posts
             SET
                 user_id = ?,
                 category_id = ?,
