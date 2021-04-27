@@ -1,6 +1,9 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from comments import create_comment, get_all_comments
+from categories import get_all_categories, create_category
+from tags import create_tag, get_all_tags, delete_tag
+
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -71,7 +74,17 @@ class HandleRequests(BaseHTTPRequestHandler):
         if len(parsed) == 2:
             ( resource, id ) = parsed
 
-            if resource == "comments":
+            if resource == "categories":
+                if id is not None:
+                    pass
+                else:
+                    response = get_all_categories()
+            elif resource == "tags":
+                if id is not None:
+                    pass
+                else:
+                    response = get_all_tags()
+            elif resource == "comments":
                 if id is not None:
                     pass
                 else:
@@ -119,9 +132,12 @@ class HandleRequests(BaseHTTPRequestHandler):
         #     new_creation = create_employee(post_body)
         # elif resource == "locations":
         #     new_creation = create_location(post_body)
+        if resource == "tags":
+            new_creation = create_tag(post_body)
+        if resource == "categories":
+            new_creation = create_category(post_body)
 
-        # Encode the new animal and send in response
-        self.wfile.write(json.dumps(new_creation).encode())
+        self.wfile.write(new_creation.encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.
@@ -154,13 +170,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
-        if resource == "animals":
-            pass
-        elif resource == "customers":
-            pass
-        elif resource == "locations":
-            pass
+
+        if resource == "tags":
+            delete_tag(id)
+
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
