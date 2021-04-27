@@ -114,7 +114,6 @@ def get_posts_by_user_id(user_id):
     return json.dumps(posts)
 
 def get_post_by_id(id):
-
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
@@ -165,11 +164,18 @@ def get_post_by_id(id):
     return json.dumps(post.__dict__)
 
 def create_post(new_post):
-    new_post['approved'] = 1
-    if 'imageUrl' not in new_post:
-        new_post['imageUrl'] = ""
+    new_post['approved'] = 0
+    new_id = -1
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
+        db_cursor.execute("""
+        Select is_admin
+        FROM Users
+        WHERE id = ?
+        """, ( new_post['userId'], ))
+        thePostCreator = db_cursor.fetchone()
+        if thePostCreator[0] == 1:
+            new_post['approved'] = 1
         db_cursor.execute("""
         INSERT INTO Posts
             ( user_id,
@@ -189,9 +195,7 @@ def create_post(new_post):
                 new_post['content'],
                 new_post['approved'], )
         )
-        id = db_cursor.lastrowid
-        new_post['approved'] = True
-        new_post['id'] = id
+        new_id = db_cursor.lastrowid
         if new_post['tagIds']:
             for tag_id in new_post['tagIds']:
                 db_cursor.execute("""
@@ -199,8 +203,9 @@ def create_post(new_post):
                     ( post_id, tag_id )
                 VALUES
                     ( ?, ? );
-                """, (id, tag_id ))
-    return json.dumps(new_post)
+                """, (new_id, tag_id ))
+    new_post_result = get_post_by_id(new_id)
+    return new_post_result
 
 def delete_post(id):
     with sqlite3.connect("./rare.db") as conn:
