@@ -8,26 +8,8 @@ CREATE TABLE "Users" (
   "password" varchar,
   "profile_image_url" varchar,
   "created_on" date,
-  "active" bit,
-  "user_type" varchar
+  "active" bit
 );
-
-INSERT INTO Users
-  ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on')
-VALUES  
-  ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', 12/31/2020);
-
-DELETE FROM Users
-WHERE id = 2;
-
-SELECT * FROM users;
-
-SELECT
-    *
-FROM users
-WHERE username = 'test@user.com' and password = 'password';
-
-DROP Table Users;
 
 CREATE TABLE "DemotionQueue" (
   "action" varchar,
@@ -64,6 +46,8 @@ CREATE TABLE "Comments" (
   "post_id" INTEGER,
   "author_id" INTEGER,
   "content" varchar,
+  "subject" varchar,
+  "created_on" date,
   FOREIGN KEY(`post_id`) REFERENCES `Posts`(`id`),
   FOREIGN KEY(`author_id`) REFERENCES `Users`(`id`)
 );
@@ -105,3 +89,6 @@ CREATE TABLE "Categories" (
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
+INSERT INTO Users ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'profile_image_url', 'created_on', 'active') VALUES ('phil', 'phan', 'a@b.c', 'it me', 'philphan', 'password', 'https://pngtree.com/so/happy', '2020-01-01', 1);
+INSERT INTO Posts ('user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (1, 1, 'new post', '2021-01-01', 'https://pngtree.com/so/happy', 'testing post', 1)
+INSERT INTO comments ('post_id', 'author_id', 'content', 'subject', 'created_on') VALUES (1, 1, 'test', 'test', '2021-01-01')

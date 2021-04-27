@@ -1,43 +1,41 @@
 import sqlite3
 import json
-from models import Category
+from models import Tag
 
-def get_all_categories():
+def get_all_tags():
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
         db_cursor.execute("""
         SELECT
-            c.id,
-            c.label
-        FROM Categories c
+            t.id,
+            t.label
+        FROM Tags t
         ORDER by label
         """)
-        categories = []
+        tags = []
         dataset = db_cursor.fetchall()
         for row in dataset :
-            category = Category(row['id'], row['label'])
-            categories.append(category.__dict__)
-    return json.dumps(categories)
-
-def delete_category(id):
+            tag = Tag(row['id'], row['label'])
+            tags.append(tag.__dict__)
+    return json.dumps(tags)
+def delete_tag(id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
         db_cursor.execute("""
-        DELETE FROM Categories
+        DELETE from tags
         WHERE id = ?
         """,(id,))
-
-def create_category(new_category):
+def create_tag(new_tag):
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
         db_cursor.execute("""
-        INSERT INTO Categories
+        INSERT INTO Tags
             (label)
         VALUES
             (?)
-        """, (new_category['label'],))
+        """, (new_tag['label'],))
         id = db_cursor.lastrowid
-        new_category['id'] = id
-    return json.dumps(new_category)
+        new_tag['id'] = id
+    return json.dumps(new_tag) 
