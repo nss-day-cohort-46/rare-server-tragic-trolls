@@ -8,7 +8,7 @@ from posts import ( get_posts_by_user_id,
                     get_all_posts,
                     delete_post )
 from comments import create_comment, get_all_comments
-from users import register_new_user, existing_user_check
+from users import register_new_user, existing_user_check, get_all_users
 from users import register_new_user
 from categories import get_all_categories, create_category, delete_category
 from tags import create_tag, get_all_tags, delete_tag
@@ -87,7 +87,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_user(id)
                 else:
                     response = get_all_users()
-            elif resource == "customers":
+            # elif resource == "customers":
             if resource == "categories":
                 if id is not None:
                     pass
