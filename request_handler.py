@@ -1,5 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from users import register_new_user, existing_user_check
 from users import register_new_user
 from categories import get_all_categories, create_category
 from tags import create_tag, get_all_tags, delete_tag
@@ -136,6 +137,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "users":
             new_creation = register_new_user(post_body)
+        if resource == "login":
+            new_creation = existing_user_check(post_body)
        
         if resource == "tags":
             new_creation = create_tag(post_body)

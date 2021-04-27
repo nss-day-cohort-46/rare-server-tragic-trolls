@@ -20,6 +20,13 @@ VALUES
 DELETE FROM Users
 WHERE id = 2;
 
+SELECT * FROM users;
+
+SELECT
+    *
+FROM users
+WHERE username = 'test@user.com' and password = 'password';
+
 DROP Table Users;
 
 CREATE TABLE "DemotionQueue" (

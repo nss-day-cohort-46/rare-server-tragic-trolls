@@ -6,7 +6,7 @@ from models import User
 def register_new_user(new_user):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
-        db_cursor = conn.cursor()
+        db_cursor = conn.cursor() 
 
         db_cursor.execute(""" 
         INSERT INTO users
@@ -27,4 +27,33 @@ def register_new_user(new_user):
         new_user["id"] = id
 
         return json.dumps(new_user)
+
+def existing_user_check(login_info):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(""" 
+        SELECT
+            u.id
+        FROM users u
+        WHERE u.username = ? and u.password = ?
+        """, (login_info["username"], login_info["password"]))
+
+        data = db_cursor.fetchone()
+
+        response = {}
+
+        if data["id"]:
+            response = {
+                "valid": "valid",
+                "token": data["id"]
+            }
+
+        return json.dumps(response)
+
+
+
+
+
 
