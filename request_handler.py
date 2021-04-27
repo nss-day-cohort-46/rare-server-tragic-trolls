@@ -1,6 +1,11 @@
 from comments.request import delete_comment, update_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from posts import ( get_posts_by_user_id, 
+                    get_post_by_id, 
+                    create_post,
+                    get_all_posts,
+                    delete_post )
 from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check
 from users import register_new_user
@@ -86,6 +91,16 @@ class HandleRequests(BaseHTTPRequestHandler):
                     pass
                 else:
                     response = get_all_tags()
+            elif resource == "employees":
+                if id is not None:
+                    response = get_single_employee(id)
+                else:
+                    response = get_all_employees()
+            elif resource == "posts":
+                if id is not None:
+                    response = get_post_by_id(id)
+                else:
+                    response = get_all_posts()
             elif resource == "comments":
                 if id is not None:
                     pass
@@ -102,7 +117,13 @@ class HandleRequests(BaseHTTPRequestHandler):
             # query parameter that specified the customer
             # email as a filtering value?
             if key == "email" and resource == "customers":
-                pass
+                response = get_customers_by_email(value)
+            elif key == "location_id" and resource == "animals":
+                response = get_animals_by_location(value)
+            elif key == "location_id" and resource == "employees":
+                response = get_employees_by_location(value)
+            elif key == "userId" and resource == "posts":
+                response = get_posts_by_user_id(value)
         self.wfile.write(response.encode())
 
     # Here's a method on the class that overrides the parent's method.
@@ -123,6 +144,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Initialize new animal
         new_creation = None
 
+        if resource == "posts":
+            new_creation = create_post(post_body)
         if resource == "comments":
             new_creation = create_comment(post_body)
         if resource == "users":
@@ -167,7 +190,9 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        if resource == "comments":
+        if resource == "posts":
+            delete_post(id)
+        elif resource == "comments":
             delete_comment(id)
         elif resource == "tags":
             delete_tag(id)
