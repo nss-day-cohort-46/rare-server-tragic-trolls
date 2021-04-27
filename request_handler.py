@@ -1,3 +1,4 @@
+from comments.request import delete_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from posts import ( get_posts_by_user_id, 
@@ -191,6 +192,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         if resource == "posts":
             delete_post(id)
+        elif resource == "comments":
+            delete_comment(id)
         elif resource == "tags":
             delete_tag(id)
         elif resource == "categories":
