@@ -17,18 +17,6 @@ INSERT INTO Users
 VALUES  
   ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', 12/31/2020);
 
-DELETE FROM Users
-WHERE id = 2;
-
-SELECT * FROM users;
-
-SELECT
-    *
-FROM users
-WHERE username = 'test@user.com' and password = 'password';
-
-DROP Table Users;
-
 CREATE TABLE "DemotionQueue" (
   "action" varchar,
   "admin_id" INTEGER,

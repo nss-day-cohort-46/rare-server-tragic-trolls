@@ -37,7 +37,8 @@ def existing_user_check(login_info):
 
         db_cursor.execute(""" 
         SELECT
-            u.id
+            u.id,
+            u.active
         FROM users u
         WHERE u.username = ? and u.password = ?
         """, (login_info["username"], login_info["password"]))
@@ -46,12 +47,22 @@ def existing_user_check(login_info):
 
         response = {}
 
-        if data["id"]:
+        if data:
+            if data["active"]:
+                response = {
+                    "valid": "valid",
+                    "token": data["id"]
+                }
+            else:
+                response = {
+                    "inactive_message": "User is not active; please contact admin for assistance"
+                }
+        else:
             response = {
-                "valid": "valid",
-                "token": data["id"]
+                "no_user_message": "User does not exist"
             }
 
+        
         return json.dumps(response)
 
 def get_all_users():
