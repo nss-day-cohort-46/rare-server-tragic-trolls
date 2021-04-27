@@ -223,26 +223,51 @@ def delete_post(id):
         WHERE id = ?
         """, (id, ))
 
-def update_post(id, post_body):
+        db_cursor.execute("""
+        DELETE FROM PostTags
+        WHERE post_id = ?
+        """, (id, ))
+
+def update_post(id, put_body):
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        UPDATE Animal
+        UPDATE Post
             SET
-                name = ?,
-                breed = ?,
-                status = ?,
-                location_id = ?,
-                customer_id = ?
+                user_id = ?,
+                category_id = ?,
+                title = ?,
+                publication_date = ?,
+                image_url = ?,
+                content = ?,
+                approved = ?
         WHERE id = ?
-        """, (new_animal['name'], new_animal['breed'],
-              new_animal['status'], new_animal['location_id'],
-              new_animal['customer_id'], id, ))
+        """, ( put_body['userId'], 
+                put_body['categoryId'],
+                put_body['title'], 
+                put_body['publicationDate'],
+                put_body['imageUrl'], 
+                put_body['content'], 
+                put_body['approved'], 
+                id ))
 
         # Were any rows affected?
         # Did the client send an `id` that exists?
         rows_affected = db_cursor.rowcount
+
+        if put_body['tagIds']:
+            db_cursor.execute("""
+            DELETE FROM PostTags
+            WHERE post_id = ?
+            """, (id, ))
+            for tag_id in put_body['tagIds']:
+                db_cursor.execute("""
+                INSERT INTO PostTags
+                    ( post_id, tag_id )
+                VALUES
+                    ( ?, ? );
+                """, (id, tag_id ))
 
     if rows_affected == 0:
         # Forces 404 response by main module
