@@ -87,9 +87,35 @@ def get_all_users():
 
         return json.dumps(users)
 
+def get_user_by_id(id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
+        db_cursor.execute(""" 
+        SELECT
+            u.first_name,
+            u.last_name,
+            u.profile_image_url,
+            u.display_name,
+            u.email,
+            u.created_on,
+            u.is_admin
+        FROM Users u
+        WHERE id = ?
+        """, (id,))
 
+        data = db_cursor.fetchone()
 
-
-
-
+        user = User(first_name = data["first_name"], 
+                    last_name = data["last_name"], 
+                    display_name = data["display_name"], 
+                    user_name = None, 
+                    password = None,
+                    email = data["email"], 
+                    bio = None, 
+                    created_on = data["created_on"], 
+                    is_admin = data["is_admin"],
+                    profile_image_url = data["profile_image_url"])
+        
+        return json.dumps(user.__dict__)
