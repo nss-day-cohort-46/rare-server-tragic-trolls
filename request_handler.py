@@ -1,4 +1,4 @@
-from reactions.request import add_reaction
+from reactions.request import add_reaction, create_reaction
 from comments.request import delete_comment, update_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -139,6 +139,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         # function next.
         if resource == "postreactions":
             new_creation = add_reaction(post_body)
+        elif resource == "reactions":
+            new_creation = create_reaction(post_body)
         elif resource == "posts":
             new_creation = create_post(post_body)
         elif resource == "comments":
