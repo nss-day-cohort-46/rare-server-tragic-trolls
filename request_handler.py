@@ -1,6 +1,17 @@
+from reactions.request import add_reaction
+from comments.request import delete_comment, update_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from tags import get_all_tags, delete_tag, update_tag
+from posts import ( get_posts_by_user_id, 
+                    get_post_by_id, 
+                    create_post,
+                    get_all_posts,
+                    delete_post )
+from comments import create_comment, get_all_comments
+from users import register_new_user, existing_user_check
+from users import register_new_user
+from categories import get_all_categories, create_category, delete_category
+from tags import create_tag, get_all_tags, delete_tag, update_tag
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -71,26 +82,26 @@ class HandleRequests(BaseHTTPRequestHandler):
         if len(parsed) == 2:
             ( resource, id ) = parsed
 
-            if resource == "animals":
+            if resource == "categories":
                 if id is not None:
-                    response = get_single_animal(id)
+                    pass
                 else:
-                    response = get_all_animals()
+                    response = get_all_categories()
             elif resource == "tags":
                 if id is not None:
-                    response = get_single_customer(id)
+                    pass
                 else:
                     response = get_all_tags()
-            elif resource == "employees":
+            elif resource == "posts":
                 if id is not None:
-                    response = get_single_employee(id)
+                    response = get_post_by_id(id)
                 else:
-                    response = get_all_employees()
-            elif resource == "locations":
+                    response = get_all_posts()
+            elif resource == "comments":
                 if id is not None:
-                    response = get_single_location(id)
+                    pass
                 else:
-                    response = get_all_locations()
+                    response = get_all_comments()
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
@@ -101,15 +112,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             # Is the resource `customers` and was there a
             # query parameter that specified the customer
             # email as a filtering value?
-            if key == "email" and resource == "customers":
-                response = get_customers_by_email(value)
-            elif key == "location_id" and resource == "animals":
-                response = get_animals_by_location(value)
-            elif key == "location_id" and resource == "employees":
-                response = get_employees_by_location(value)
-            elif key == "status" and resource == "animals":
-                response = get_animals_by_status(value)
-
+            if key == "userId" and resource == "posts":
+                response = get_posts_by_user_id(value)
         self.wfile.write(response.encode())
 
     # Here's a method on the class that overrides the parent's method.
@@ -133,17 +137,22 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Add a new animal to the list. Don't worry about
         # the orange squiggle, you'll define the create_animal
         # function next.
-        if resource == "animals":
-            new_creation = create_animal(post_body)
-        # elif resource == "customers":
-        #     new_creation = create_customer(post_body)
-        # elif resource == "employees":
-        #     new_creation = create_employee(post_body)
-        # elif resource == "locations":
-        #     new_creation = create_location(post_body)
+        if resource == "postreactions":
+            new_creation = add_reaction(post_body)
+        elif resource == "posts":
+            new_creation = create_post(post_body)
+        elif resource == "comments":
+            new_creation = create_comment(post_body)
+        elif resource == "users":
+            new_creation = register_new_user(post_body)
+        elif resource == "login":
+            new_creation = existing_user_check(post_body)
+        elif resource == "tags":
+            new_creation = create_tag(post_body)
+        elif resource == "categories":
+            new_creation = create_category(post_body)
 
-        # Encode the new animal and send in response
-        self.wfile.write(json.dumps(new_creation).encode())
+        self.wfile.write(new_creation.encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.
@@ -157,9 +166,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url(self.path)
 
         success = False
-
         if resource == "tags":
             success = update_tag(id, post_body)
+        elif resource == "comments":
+            success = update_comment(id, post_body)
         # rest of the elif's
 
         if success:
@@ -176,13 +186,14 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
-        if resource == "tags":
+        if resource == "posts":
+            delete_post(id)
+        elif resource == "comments":
+            delete_comment(id)
+        elif resource == "tags":
             delete_tag(id)
-        elif resource == "customers":
-            delete_customer(id)
-        elif resource == "locations":
-            delete_location(id)
+        elif resource == "categories":
+            delete_category(id)
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())

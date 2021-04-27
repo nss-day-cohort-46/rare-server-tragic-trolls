@@ -42,3 +42,15 @@ def delete_tag(id):
         DELETE from tags
         WHERE id = ?
         """,(id,))
+def create_tag(new_tag):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        INSERT INTO Tags
+            (label)
+        VALUES
+            (?)
+        """, (new_tag['label'],))
+        id = db_cursor.lastrowid
+        new_tag['id'] = id
+    return json.dumps(new_tag) 
