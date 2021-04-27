@@ -2,6 +2,46 @@ import sqlite3
 import json
 from models import Post
 
+def get_all_posts():
+
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.user_id,
+            p.category_id,
+            p.title,
+            p.publication_date,
+            p.image_url,
+            p.content,
+            p.approved
+        FROM posts p
+        """)
+
+        posts = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            post = Post(row['id'], 
+                        row['user_id'], 
+                        row['category_id'],
+                        row['title'], 
+                        row['publication_date'],
+                        row['image_url'], 
+                        row['content'], 
+                        row['approved'])
+            if post.approved == 0:
+                post.approved = False
+            else:
+                post.approved = True
+            posts.append(post.__dict__)
+
+    return json.dumps(posts)
+
 def get_posts_by_user_id(user_id):
 
     with sqlite3.connect("./rare.db") as conn:
@@ -18,11 +58,7 @@ def get_posts_by_user_id(user_id):
             p.publication_date,
             p.image_url,
             p.content,
-            CASE [approved]
-            WHEN 1 then  'True'
-            WHEN 0 then 'False'
-            ELSE 'NA'
-            END AS [approved]
+            p.approved
         FROM posts p
         WHERE p.user_id = ?
         """, (user_id, ))
@@ -39,6 +75,10 @@ def get_posts_by_user_id(user_id):
                         row['image_url'], 
                         row['content'], 
                         row['approved'])
+            if post.approved == 0:
+                post.approved = False
+            else:
+                post.approved = True
             posts.append(post.__dict__)
 
     return json.dumps(posts)
@@ -59,17 +99,12 @@ def get_post_by_id(id):
             p.publication_date,
             p.image_url,
             p.content,
-            CASE [approved]
-            WHEN 1 then  'True'
-            WHEN 0 then 'False'
-            ELSE 'NA'
-            END AS [approved]
+            p.approved
         FROM posts p
         WHERE p.id = ?
         """, (id, ))
 
         single_post = db_cursor.fetchone()
-
         post = Post(single_post['id'], 
                     single_post['user_id'], 
                     single_post['category_id'],
@@ -78,6 +113,11 @@ def get_post_by_id(id):
                     single_post['image_url'], 
                     single_post['content'], 
                     single_post['approved'])
+
+        if post.approved == 0:
+            post.approved = False
+        else:
+            post.approved = True
 
     return json.dumps(post.__dict__)
 
@@ -121,3 +161,12 @@ def create_post(new_post):
 
 
     return new_post
+
+def delete_post(id):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM Posts
+        WHERE id = ?
+        """, (id, ))
