@@ -1,6 +1,8 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from comments import create_comment, get_all_comments
+from users import register_new_user, existing_user_check
+from users import register_new_user
 from categories import get_all_categories, create_category
 from tags import create_tag, get_all_tags, delete_tag
 
@@ -121,17 +123,12 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Initialize new animal
         new_creation = None
 
-        # Add a new animal to the list. Don't worry about
-        # the orange squiggle, you'll define the create_animal
-        # function next.
         if resource == "comments":
             new_creation = create_comment(post_body)
-        # elif resource == "customers":
-        #     new_creation = create_customer(post_body)
-        # elif resource == "employees":
-        #     new_creation = create_employee(post_body)
-        # elif resource == "locations":
-        #     new_creation = create_location(post_body)
+        if resource == "users":
+            new_creation = register_new_user(post_body)
+        if resource == "login":
+            new_creation = existing_user_check(post_body)
         if resource == "tags":
             new_creation = create_tag(post_body)
         if resource == "categories":
