@@ -138,3 +138,14 @@ SELECT
     pt.tag_id
 FROM PostTags pt
 WHERE pt.post_id = 2
+
+SELECT
+    pt.id,
+    pt.post_id,
+    pt.tag_id,
+    t.id,
+    t.label
+FROM PostTags pt
+JOIN Tags t
+    ON t.id = pt.tag_id
+WHERE pt.post_id = 1

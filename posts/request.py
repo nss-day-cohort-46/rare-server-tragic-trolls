@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Post, PostTag
+from models import Post, Tag
 
 def get_all_posts():
 
@@ -42,16 +42,19 @@ def get_all_posts():
             SELECT
                 pt.id,
                 pt.post_id,
-                pt.tag_id
+                pt.tag_id,
+                t.id,
+                t.label
             FROM PostTags pt
+            JOIN Tags t
+                ON t.id = pt.tag_id
             WHERE pt.post_id = ?
             """, ( row['id'], ))
             post_tags = []
             tagdataset = db_cursor.fetchall()
             for tag_row in tagdataset:
-                post_tag = PostTag(tag_row['id'], 
-                            tag_row['post_id'], 
-                            tag_row['tag_id'])
+                post_tag = Tag(tag_row['tag_id'], 
+                            tag_row['label'])
                 post_tags.append(post_tag.__dict__)
             post.tags = post_tags
             posts.append(post.__dict__)
