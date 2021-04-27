@@ -1,3 +1,4 @@
+from comments.request import delete_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from comments import create_comment, get_all_comments
@@ -165,8 +166,10 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
-        
-        if resource == "tags":
+
+        if resource == "comments":
+            delete_comment(id)
+        elif resource == "tags":
             delete_tag(id)
         elif resource == "categories":
             delete_category(id)
