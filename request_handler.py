@@ -1,6 +1,8 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from tags import get_all_tags, delete_tag
+from categories import get_all_categories, create_category
+from tags import create_tag, get_all_tags, delete_tag
+
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -71,11 +73,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         if len(parsed) == 2:
             ( resource, id ) = parsed
 
-            if resource == "animals":
+            if resource == "categories":
                 if id is not None:
                     response = get_single_animal(id)
                 else:
-                    response = get_all_animals()
+                    response = get_all_categories()
             elif resource == "tags":
                 if id is not None:
                     response = get_single_customer(id)
@@ -130,20 +132,12 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Initialize new animal
         new_creation = None
 
-        # Add a new animal to the list. Don't worry about
-        # the orange squiggle, you'll define the create_animal
-        # function next.
-        if resource == "animals":
-            new_creation = create_animal(post_body)
-        # elif resource == "customers":
-        #     new_creation = create_customer(post_body)
-        # elif resource == "employees":
-        #     new_creation = create_employee(post_body)
-        # elif resource == "locations":
-        #     new_creation = create_location(post_body)
+        if resource == "tags":
+            new_creation = create_tag(post_body)
+        if resource == "categories":
+            new_creation = create_category(post_body)
 
-        # Encode the new animal and send in response
-        self.wfile.write(json.dumps(new_creation).encode())
+        self.wfile.write(new_creation.encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.
@@ -176,13 +170,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
+
         if resource == "tags":
             delete_tag(id)
-        elif resource == "customers":
-            delete_customer(id)
-        elif resource == "locations":
-            delete_location(id)
+
 
         # Encode the new animal and send in response
         self.wfile.write("".encode())
