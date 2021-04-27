@@ -275,7 +275,7 @@ def update_post(id, put_body):
         # Forces 204 response by main module
         return True
 
-def approve_post(approval_body):
+def approve_post(id):
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
         db_cursor.execute("""
@@ -283,7 +283,7 @@ def approve_post(approval_body):
             SET
                 approved = 1
         WHERE id = ?
-        """, ( approval_body['postId'], ))
+        """, ( id, ))
         # Were any rows affected?
         # Did the client send an `id` that exists?
         rows_affected = db_cursor.rowcount
