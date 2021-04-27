@@ -20,6 +20,15 @@ def get_all_categories():
             categories.append(category.__dict__)
     return json.dumps(categories)
 
+def delete_category(id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        DELETE FROM Categories
+        WHERE id = ?
+        """,(id,))
+
 def create_category(new_category):
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
@@ -32,4 +41,3 @@ def create_category(new_category):
         id = db_cursor.lastrowid
         new_category['id'] = id
     return json.dumps(new_category)
-
