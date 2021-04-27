@@ -90,7 +90,6 @@ class HandleRequests(BaseHTTPRequestHandler):
                     pass
                 else:
                     response = get_all_tags()
-<<<<<<< HEAD
             elif resource == "employees":
                 if id is not None:
                     response = get_single_employee(id)
@@ -101,13 +100,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_post_by_id(id)
                 else:
                     response = get_all_posts()
-=======
             elif resource == "comments":
                 if id is not None:
                     pass
                 else:
                     response = get_all_comments()
->>>>>>> main
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
@@ -119,7 +116,6 @@ class HandleRequests(BaseHTTPRequestHandler):
             # query parameter that specified the customer
             # email as a filtering value?
             if key == "email" and resource == "customers":
-<<<<<<< HEAD
                 response = get_customers_by_email(value)
             elif key == "location_id" and resource == "animals":
                 response = get_animals_by_location(value)
@@ -127,10 +123,6 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_employees_by_location(value)
             elif key == "userId" and resource == "posts":
                 response = get_posts_by_user_id(value)
-
-=======
-                pass
->>>>>>> main
         self.wfile.write(response.encode())
 
     # Here's a method on the class that overrides the parent's method.
