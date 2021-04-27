@@ -6,7 +6,8 @@ from posts import ( get_posts_by_user_id,
                     get_post_by_id, 
                     create_post,
                     get_all_posts,
-                    delete_post )
+                    delete_post,
+                    update_post )
 from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check
 from users import register_new_user
@@ -172,6 +173,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = update_comment(id, post_body)
         elif resource == "categories":
             success = update_category(id, post_body)
+        elif resource == "posts":
+            success = update_post(id, post_body)
         # rest of the elif's
 
         if success:
