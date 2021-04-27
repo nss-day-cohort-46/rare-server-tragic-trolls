@@ -98,6 +98,25 @@ def get_posts_by_user_id(user_id):
                 post.approved = False
             else:
                 post.approved = True
+            db_cursor.execute("""
+            SELECT
+                pt.id,
+                pt.post_id,
+                pt.tag_id,
+                t.id,
+                t.label
+            FROM PostTags pt
+            JOIN Tags t
+                ON t.id = pt.tag_id
+            WHERE pt.post_id = ?
+            """, ( row['id'], ))
+            post_tags = []
+            tagdataset = db_cursor.fetchall()
+            for tag_row in tagdataset:
+                post_tag = Tag(tag_row['tag_id'], 
+                            tag_row['label'])
+                post_tags.append(post_tag.__dict__)
+            post.tags = post_tags
             posts.append(post.__dict__)
 
     return json.dumps(posts)
@@ -132,12 +151,29 @@ def get_post_by_id(id):
                     single_post['image_url'], 
                     single_post['content'], 
                     single_post['approved'])
-
         if post.approved == 0:
             post.approved = False
         else:
             post.approved = True
-
+        db_cursor.execute("""
+        SELECT
+            pt.id,
+            pt.post_id,
+            pt.tag_id,
+            t.id,
+            t.label
+        FROM PostTags pt
+        JOIN Tags t
+            ON t.id = pt.tag_id
+        WHERE pt.post_id = ?
+        """, ( single_post['id'], ))
+        post_tags = []
+        tagdataset = db_cursor.fetchall()
+        for tag_row in tagdataset:
+            post_tag = Tag(tag_row['tag_id'], 
+                        tag_row['label'])
+            post_tags.append(post_tag.__dict__)
+        post.tags = post_tags
     return json.dumps(post.__dict__)
 
 def create_post(new_post):
