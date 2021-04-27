@@ -19,6 +19,7 @@ def get_all_categories():
             category = Category(row['id'], row['label'])
             categories.append(category.__dict__)
     return json.dumps(categories)
+
 def delete_category(id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
@@ -27,6 +28,7 @@ def delete_category(id):
         DELETE FROM Categories
         WHERE id = ?
         """,(id,))
+
 def update_category(id, updated_category):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
@@ -42,3 +44,16 @@ def update_category(id, updated_category):
             return False
         else:
             return True
+
+def create_category(new_category):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        INSERT INTO Categories
+            (label)
+        VALUES
+            (?)
+        """, (new_category['label'],))
+        id = db_cursor.lastrowid
+        new_category['id'] = id
+    return json.dumps(new_category)
