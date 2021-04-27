@@ -143,13 +143,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Initialize new animal
         new_creation = None
 
-<<<<<<< HEAD
         if resource == "posts":
             new_creation = create_post(post_body)
-=======
         if resource == "comments":
             new_creation = create_comment(post_body)
->>>>>>> main
         if resource == "users":
             new_creation = register_new_user(post_body)
         if resource == "login":
@@ -191,15 +188,10 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
-<<<<<<< HEAD
 
         if resource == "posts":
             delete_post(id)
         elif resource == "tags":
-=======
-        
-        if resource == "tags":
->>>>>>> main
             delete_tag(id)
         elif resource == "categories":
             delete_category(id)
