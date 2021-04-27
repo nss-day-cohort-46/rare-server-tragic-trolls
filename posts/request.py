@@ -222,9 +222,18 @@ def delete_post(id):
         """, (id, ))
 
 def update_post(id, put_body):
+    rows_affected = 0
     with sqlite3.connect("./rare.db") as conn:
         db_cursor = conn.cursor()
-
+        if put_body['approved'] == True:
+            db_cursor.execute("""
+            Select is_admin
+            FROM Users
+            WHERE id = ?
+            """, ( put_body['userId'], ))
+            thePostCreator = db_cursor.fetchone()
+            if thePostCreator[0] == 0:
+                put_body['approved'] = False
         db_cursor.execute("""
         UPDATE Posts
             SET
@@ -244,11 +253,9 @@ def update_post(id, put_body):
                 put_body['content'], 
                 put_body['approved'], 
                 id ))
-
         # Were any rows affected?
         # Did the client send an `id` that exists?
         rows_affected = db_cursor.rowcount
-
         if put_body['tagIds']:
             db_cursor.execute("""
             DELETE FROM PostTags
@@ -261,10 +268,28 @@ def update_post(id, put_body):
                 VALUES
                     ( ?, ? );
                 """, (id, tag_id ))
-
     if rows_affected == 0:
         # Forces 404 response by main module
         return False
     else:
         # Forces 204 response by main module
         return True
+
+def approve_post(approval_body):
+    with sqlite3.connect("./rare.db") as conn:
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        UPDATE Posts
+            SET
+                approved = 1
+        WHERE id = ?
+        """, ( approval_body['postId'], ))
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+        if rows_affected == 0:
+            # Forces 404 response by main module
+            return False
+        else:
+            # Forces 204 response by main module
+            return True
