@@ -110,3 +110,8 @@ UPDATE Users
         SET is_admin = NOT is_admin
         WHERE id = 1;
 
+INSERT INTO users
+            ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'created_on', 'profile_image_url', 'is_admin', 'active')
+        VALUES
+            ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'Wednesday, April 28, 2021', 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png', FALSE, FALSE);
+

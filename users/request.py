@@ -7,29 +7,42 @@ def register_new_user(new_user):
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor() 
 
-        # Create class instance before insert
+        new_user_object = User(id = None,
+                                first_name = new_user["first_name"],
+                                last_name = new_user["last_name"],
+                                display_name = new_user["display_name"],
+                                username = new_user["username"], 
+                                email = new_user["email"],
+                                password = new_user["password"],
+                                bio = new_user["bio"],
+                                created_on = new_user["created_on"],
+                                profile_image_url = new_user["profile_image_url"])
+
+        new_user_object = new_user_object.__dict__
 
         db_cursor.execute(""" 
         INSERT INTO users
-            ('first_name', 'last_name', 'display_name' 'email', 'bio', 'username', 'password', 'created_on', 'profile_image_url')
+            ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'created_on', 'profile_image_url', 'is_admin', 'active')
         VALUES
-            (?,?,?,?,?,?,?)
-        """, (new_user["firstName"], 
-                new_user["lastName"],
-                new_user["displayName"], 
-                new_user["email"], 
-                new_user["bio"], 
-                new_user["username"], 
-                new_user["password"], 
-                new_user["createdOn"],
-                new_user["profileImageUrl"]
+            (?,?,?,?,?,?,?,?,?,?,?)
+        """, (new_user_object["firstName"], 
+                new_user_object["lastName"],
+                new_user_object["displayName"], 
+                new_user_object["email"], 
+                new_user_object["bio"], 
+                new_user_object["username"], 
+                new_user_object["password"], 
+                new_user_object["createdOn"],
+                new_user_object["profileImageUrl"],
+                new_user_object["isAdmin"],
+                new_user_object["active"]
         ))
 
         id = db_cursor.lastrowid
 
-        new_user["id"] = id
+        new_user_object["id"] = id
 
-        return json.dumps(new_user)
+        return json.dumps(new_user_object)
 
 def existing_user_check(login_info):
     with sqlite3.connect("./rare.db") as conn:
@@ -91,7 +104,7 @@ def get_all_users():
                         first_name = row["first_name"], 
                         last_name = row["last_name"], 
                         display_name = row["display_name"], 
-                        user_name = None, 
+                        username = None, 
                         password = None,
                         email = None, 
                         bio = None, 
@@ -129,7 +142,7 @@ def get_user_by_id(id):
                     first_name = data["first_name"], 
                     last_name = data["last_name"], 
                     display_name = data["display_name"], 
-                    user_name = None, 
+                    username = None, 
                     password = None,
                     email = data["email"], 
                     bio = None, 
@@ -177,3 +190,15 @@ def change_user_type(user_body):
             return True
         else:
             return False
+
+# {"first_name": "tragic",
+# "last_name": "troll",
+# "display_name": "t_troll",
+# "email": "tragic@troll.com",
+# "bio": "tragic",
+# "username": "tragic@troll.com",
+# "password": "password",
+# "created_on": 12/23/2020,
+# "profile_image_url": "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
+# }
+
