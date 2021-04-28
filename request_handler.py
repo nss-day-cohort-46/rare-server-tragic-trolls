@@ -10,7 +10,8 @@ from posts import ( get_posts_by_user_id,
                     update_post,
                     approve_post,
                     subscribing_to_post,
-                    get_subscribed_posts_by_id )
+                    get_subscribed_posts_by_id,
+                    unsubscribing_to_post )
 from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check, get_all_users
 from categories import get_all_categories, create_category, delete_category, update_category
@@ -165,6 +166,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
         if resource == "approve":
             success = approve_post(id)
+        if resource == "unsubscribe":
+            success = unsubscribing_to_post(post_body)
         # rest of the elif's
 
         if success:

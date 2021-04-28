@@ -6,4 +6,5 @@ from .request import ( get_posts_by_user_id,
                         update_post,
                         approve_post,
                         subscribing_to_post,
-                        get_subscribed_posts_by_id )
+                        get_subscribed_posts_by_id,
+                        unsubscribing_to_post )

@@ -374,3 +374,40 @@ def get_subscribed_posts_by_id(id):
             posts.append(post.__dict__)
 
     return json.dumps(posts)
+
+def unsubscribing_to_post(patch_body):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        SELECT
+            s.id,
+            s.follower_id,
+            s.author_id,
+            s.created_on,
+            s.ended_on
+        FROM subscriptions s
+        WHERE s.follower_id = ?
+        AND s.author_id = ?
+        AND (s.ended_on = "" OR s.ended_on IS NULL)
+        """, (patch_body['follower_id'],
+                patch_body['author_id'], ))
+        
+        data = db_cursor.fetchone()
+        id_to_update = data['id']
+
+        db_cursor.execute("""
+        UPDATE Subscriptions
+        SET
+            ended_on = ?
+        WHERE id = ?
+        """, ( patch_body['ended_on'],
+            id_to_update ))
+
+        rows_affected = db_cursor.rowcount
+        if rows_affected == 0:
+            # Forces 404 response by main module
+            return False
+        else:
+            # Forces 204 response by main module
+            return True
