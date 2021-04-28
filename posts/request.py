@@ -172,7 +172,7 @@ def create_post(new_post):
         Select is_admin
         FROM Users
         WHERE id = ?
-        """, ( new_post['userId'], ))
+        """, ( new_post['user_id'], ))
         thePostCreator = db_cursor.fetchone()
         if thePostCreator[0] == 1:
             new_post['approved'] = 1
@@ -187,17 +187,17 @@ def create_post(new_post):
                 approved )
         VALUES
             ( ?, ?, ?, ?, ?, ?, ? );
-        """, (new_post['userId'], 
-                new_post['categoryId'],
+        """, (new_post['user_id'], 
+                new_post['category_id'],
                 new_post['title'],
-                new_post['publicationDate'], 
-                new_post['imageUrl'],
+                new_post['publication_date'], 
+                new_post['image_url'],
                 new_post['content'],
                 new_post['approved'], )
         )
         new_id = db_cursor.lastrowid
-        if new_post['tagIds']:
-            for tag_id in new_post['tagIds']:
+        if new_post['tag_ids']:
+            for tag_id in new_post['tag_ids']:
                 db_cursor.execute("""
                 INSERT INTO PostTags
                     ( post_id, tag_id )
@@ -230,7 +230,7 @@ def update_post(id, put_body):
             Select is_admin
             FROM Users
             WHERE id = ?
-            """, ( put_body['userId'], ))
+            """, ( put_body['user_id'], ))
             thePostCreator = db_cursor.fetchone()
             if thePostCreator[0] == 0:
                 put_body['approved'] = False
@@ -245,23 +245,23 @@ def update_post(id, put_body):
                 content = ?,
                 approved = ?
         WHERE id = ?
-        """, ( put_body['userId'], 
-                put_body['categoryId'],
+        """, ( put_body['user_id'], 
+                put_body['category_id'],
                 put_body['title'], 
-                put_body['publicationDate'],
-                put_body['imageUrl'], 
+                put_body['publication_date'],
+                put_body['image_url'], 
                 put_body['content'], 
                 put_body['approved'], 
                 id ))
         # Were any rows affected?
         # Did the client send an `id` that exists?
         rows_affected = db_cursor.rowcount
-        if put_body['tagIds']:
+        if put_body['tag_ids']:
             db_cursor.execute("""
             DELETE FROM PostTags
             WHERE post_id = ?
             """, (id, ))
-            for tag_id in put_body['tagIds']:
+            for tag_id in put_body['tag_ids']:
                 db_cursor.execute("""
                 INSERT INTO PostTags
                     ( post_id, tag_id )

@@ -102,11 +102,11 @@ class HandleRequests(BaseHTTPRequestHandler):
         # `/resource?parameter=value`
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
-            if key == "userId" and resource == "posts":
+            if key == "user_id" and resource == "posts":
                 response = get_posts_by_user_id(value)
-            elif key == "categoryId" and resource == "posts":
+            elif key == "category_id" and resource == "posts":
                 response = get_posts_by_category_id(value)
-            elif key == "tagId" and resource == "posts":
+            elif key == "tag_id" and resource == "posts":
                 response = get_posts_by_tag_id(value)
             elif key == "q" and resource == "posts":
                 response = get_posts_by_title_search(value)
