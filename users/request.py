@@ -211,12 +211,15 @@ def get_users_by_profile_type(query):
         db_cursor = conn.cursor()
         boolean_query = None
 
+        users = []
+
         if query.title() == "False":
             boolean_query = 0
         elif query.title() == "True":
             boolean_query = 1
         else: 
-            return False
+            users = "Error: Query was not a boolean"
+
         db_cursor.execute(""" 
         SELECT
             u.id,
@@ -235,8 +238,6 @@ def get_users_by_profile_type(query):
         """, (boolean_query,))
 
         dataset = db_cursor.fetchall()
-
-        users = []
 
         for row in dataset:
             user = User(id = row["id"],
