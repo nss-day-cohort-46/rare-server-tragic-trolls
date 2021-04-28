@@ -8,7 +8,10 @@ from posts import ( get_posts_by_user_id,
                     get_all_posts,
                     delete_post,
                     update_post,
-                    approve_post )
+                    approve_post,
+                    subscribing_to_post,
+                    get_subscribed_posts_by_id,
+                    unsubscribing_to_post )
 from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check, get_all_users, get_user_by_id, deactivate_user, activate_user
 from categories import get_all_categories, create_category, delete_category, update_category
@@ -86,6 +89,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     pass
                 else:
                     response = get_all_comments()
+            elif resource == "subscriptions":
+                if id is not None:
+                    response = get_subscribed_posts_by_id(id)
+                else:
+                    pass
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
         # `/resource?parameter=value`
@@ -119,6 +127,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_creation = create_tag(post_body)
         elif resource == "categories":
             new_creation = create_category(post_body)
+        elif resource == "subscriptions":
+            new_creation = subscribing_to_post(post_body)
 
         self.wfile.write(new_creation.encode())
 
@@ -160,6 +170,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
         if resource == "approve":
             success = approve_post(id)
+        if resource == "unsubscribe":
+            success = unsubscribing_to_post(post_body)
         # rest of the elif's
 
         if success:
