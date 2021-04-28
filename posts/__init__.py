@@ -9,4 +9,5 @@ from .request import ( get_posts_by_user_id,
                         get_subscribed_posts_by_id,
                         unsubscribing_to_post,
                         get_posts_by_category_id,
-                        get_posts_by_tag_id )
+                        get_posts_by_tag_id,
+                        get_posts_by_title_search )

@@ -528,3 +528,59 @@ def get_posts_by_tag_id(tag_id):
             posts.append(post.__dict__)
 
     return json.dumps(posts)
+
+def get_posts_by_title_search(search_term):
+
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.user_id,
+            p.category_id,
+            p.title,
+            p.publication_date,
+            p.image_url,
+            p.content,
+            p.approved
+        FROM posts p
+        WHERE title LIKE ?
+        """, (f'%{search_term}%', ))
+
+        posts = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            post = Post(row['id'], 
+                        row['user_id'], 
+                        row['category_id'],
+                        row['title'], 
+                        row['publication_date'],
+                        row['image_url'], 
+                        row['content'], 
+                        row['approved'])
+            db_cursor.execute("""
+            SELECT
+                pt.id,
+                pt.post_id,
+                pt.tag_id,
+                t.id,
+                t.label
+            FROM PostTags pt
+            JOIN Tags t
+                ON t.id = pt.tag_id
+            WHERE pt.post_id = ?
+            """, ( row['id'], ))
+            post_tags = []
+            tagdataset = db_cursor.fetchall()
+            for tag_row in tagdataset:
+                post_tag = Tag(tag_row['tag_id'], 
+                            tag_row['label'])
+                post_tags.append(post_tag.__dict__)
+            post.tags = post_tags
+            posts.append(post.__dict__)
+
+    return json.dumps(posts)

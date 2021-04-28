@@ -13,7 +13,8 @@ from posts import ( get_posts_by_user_id,
                     get_subscribed_posts_by_id,
                     unsubscribing_to_post,
                     get_posts_by_category_id,
-                    get_posts_by_tag_id )
+                    get_posts_by_tag_id,
+                    get_posts_by_title_search )
 from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check, get_all_users, get_user_by_id, deactivate_user, activate_user
 from categories import get_all_categories, create_category, delete_category, update_category
@@ -107,6 +108,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = get_posts_by_category_id(value)
             elif key == "tagId" and resource == "posts":
                 response = get_posts_by_tag_id(value)
+            elif key == "q" and resource == "posts":
+                response = get_posts_by_title_search(value)
         self.wfile.write(response.encode())
 
     def do_POST(self):
