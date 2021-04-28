@@ -20,7 +20,7 @@ def register_new_user(new_user):
                 new_user["username"], 
                 new_user["password"], 
                 new_user["createdOn"],
-                new_user["profileImagUrl"],
+                new_user["profileImageUrl"],
                 new_user["isAdmin"]
         ))
 
@@ -109,6 +109,7 @@ def get_user_by_id(id):
 
         db_cursor.execute(""" 
         SELECT
+            u.id,
             u.first_name,
             u.last_name,
             u.profile_image_url,
@@ -123,7 +124,8 @@ def get_user_by_id(id):
 
         data = db_cursor.fetchone()
 
-        user = User(first_name = data["first_name"], 
+        user = User(id = data["id"],
+                    first_name = data["first_name"], 
                     last_name = data["last_name"], 
                     display_name = data["display_name"], 
                     user_name = None, 
@@ -145,6 +147,26 @@ def deactivate_user(id):
         db_cursor.execute(""" 
         UPDATE Users
         SET active = False
+        WHERE id = ?
+        """, (id,))
+
+        rows_affected = db_cursor.rowcount
+
+        success = False
+
+        if rows_affected > 0:
+            success = True
+        
+        return(success)
+
+def activate_user(id):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(""" 
+        UPDATE Users
+        SET active = True
         WHERE id = ?
         """, (id,))
 
