@@ -18,4 +18,5 @@ class User():
 
     @property
     def setFullName(self):
-        return f'{self.firstName} {self.lastName}'
+        return 
+        # f"{self.firstName} {self.lastName}"

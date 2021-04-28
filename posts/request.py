@@ -304,19 +304,12 @@ def subscribing_to_post(post_body):
                 created_on,
                 ended_on )
         VALUES
-            ( ?, ?, ?, "" );
+            ( ?, ?, ?, ? );
         """, (post_body['follower_id'], 
                 post_body['author_id'],
-                post_body['created_on'] )
+                post_body['created_on'],
+                post_body['ended_on'] )
         )
         new_id = db_cursor.lastrowid
-        if new_post['tagIds']:
-            for tag_id in new_post['tagIds']:
-                db_cursor.execute("""
-                INSERT INTO PostTags
-                    ( post_id, tag_id )
-                VALUES
-                    ( ?, ? );
-                """, (new_id, tag_id ))
-    new_post_result = get_post_by_id(new_id)
-    return new_post_result
+        post_body['id'] = new_id
+        return json.dumps(post_body)

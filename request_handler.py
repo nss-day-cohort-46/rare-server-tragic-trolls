@@ -8,7 +8,8 @@ from posts import ( get_posts_by_user_id,
                     get_all_posts,
                     delete_post,
                     update_post,
-                    approve_post )
+                    approve_post,
+                    subscribing_to_post )
 from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check, get_all_users
 from categories import get_all_categories, create_category, delete_category, update_category
@@ -119,6 +120,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_creation = create_tag(post_body)
         elif resource == "categories":
             new_creation = create_category(post_body)
+        elif resource == "subscriptions":
+            new_creation = subscribing_to_post(post_body)
 
         self.wfile.write(new_creation.encode())
 
