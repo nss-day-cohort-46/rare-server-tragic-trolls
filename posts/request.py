@@ -172,6 +172,7 @@ def get_post_by_id(id):
             c.created_on
         FROM Comments c
         WHERE c.post_id = ?
+        ORDER BY c.id DESC
         """, (id, ))
         comments = []
         dataset = db_cursor.fetchall()
