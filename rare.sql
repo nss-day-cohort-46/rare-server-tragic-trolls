@@ -9,16 +9,20 @@ CREATE TABLE "Users" (
   "profile_image_url" varchar,
   "created_on" date,
   "active" bit,
-  "user_type" varchar
+  "is_admin" bit
 );
 
 INSERT INTO Users
-  ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on')
+  ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on', 'active', 'is_admin')
 VALUES  
-  ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', 12/31/2020);
+  ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, True);
+INSERT INTO Users
+  ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on', 'active', 'is_admin')
+VALUES  
+  ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, False);
 
 DELETE FROM Users
-WHERE id = 2;
+WHERE id = 1;
 
 SELECT * FROM users;
 
@@ -131,3 +135,25 @@ SELECT
     END AS [approved]
 FROM posts p
 WHERE p.user_id = 1
+
+SELECT
+    pt.id,
+    pt.post_id,
+    pt.tag_id
+FROM PostTags pt
+WHERE pt.post_id = 2
+
+SELECT
+    pt.id,
+    pt.post_id,
+    pt.tag_id,
+    t.id,
+    t.label
+FROM PostTags pt
+JOIN Tags t
+    ON t.id = pt.tag_id
+WHERE pt.post_id = 1
+
+Select is_admin
+FROM Users
+WHERE id = 2
