@@ -7,11 +7,13 @@ def register_new_user(new_user):
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor() 
 
+        # Create class instance before insert
+
         db_cursor.execute(""" 
         INSERT INTO users
-            ('first_name', 'last_name', 'display_name' 'email', 'bio', 'username', 'password', 'created_on', 'profile_image_url', 'is_admin')
+            ('first_name', 'last_name', 'display_name' 'email', 'bio', 'username', 'password', 'created_on', 'profile_image_url')
         VALUES
-            (?,?,?,?,?,?,?, ?)
+            (?,?,?,?,?,?,?)
         """, (new_user["firstName"], 
                 new_user["lastName"],
                 new_user["displayName"], 
@@ -20,8 +22,7 @@ def register_new_user(new_user):
                 new_user["username"], 
                 new_user["password"], 
                 new_user["createdOn"],
-                new_user["profileImageUrl"],
-                new_user["isAdmin"]
+                new_user["profileImageUrl"]
         ))
 
         id = db_cursor.lastrowid
@@ -179,24 +180,16 @@ def activate_user(id):
         
         return(success)
 
-def change_user_type(id, user_info):
+def change_user_type(user_body):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
-        is_admin = None
-
-        if user_info["isAdmin"].title() == "False":
-            is_admin = False
-        elif user_info["isAdmin"].title() == "True":
-            is_admin = True
-        else: 
-            return False
 
         db_cursor.execute(""" 
         UPDATE Users
-        SET is_admin = ?
+        SET is_admin = NOT is_admin
         WHERE id = ?
-        """, (is_admin, id,))
+        """, (int(user_body["id"]),))
 
         rows_affected = db_cursor.rowcount
 

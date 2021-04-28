@@ -137,6 +137,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = deactivate_user(id)
         if resource == "activate":
             success = activate_user(id)
+        if resource == "user_type":
+            success = change_user_type(post_body)
         elif resource == "categories":
             success = update_category(id, post_body)
         elif resource == "posts":
@@ -161,8 +163,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
         if resource == "approve":
             success = approve_post(id)
-        if resource == "users":
-            success = change_user_type(id, post_body)
         # rest of the elif's
 
         if success:
