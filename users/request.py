@@ -140,34 +140,14 @@ def get_user_by_id(id):
         
         return json.dumps(user.__dict__)
 
-def deactivate_user(id):
+def change_active_status(id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
         db_cursor.execute(""" 
         UPDATE Users
-        SET active = False
-        WHERE id = ?
-        """, (id,))
-
-        rows_affected = db_cursor.rowcount
-
-        success = False
-
-        if rows_affected > 0:
-            success = True
-        
-        return(success)
-
-def activate_user(id):
-    with sqlite3.connect("./rare.db") as conn:
-        conn.row_factory = sqlite3.Row
-        db_cursor = conn.cursor()
-
-        db_cursor.execute(""" 
-        UPDATE Users
-        SET active = True
+        SET active = NOT active
         WHERE id = ?
         """, (id,))
 
