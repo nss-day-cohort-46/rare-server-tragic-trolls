@@ -41,7 +41,7 @@ def register_new_user(new_user):
         id = db_cursor.lastrowid
 
         response = {
-            "valied": "valid",
+            "valid": "valid",
             "token": id
         }
 

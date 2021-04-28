@@ -1,7 +1,7 @@
 import datetime
 
 class User():
-    def __init__(self, id, first_name, last_name, display_name, username, password, email, bio, created_on, profile_image_url, active = False, is_admin = False):
+    def __init__(self, id, first_name, last_name, display_name, username, password, email, bio, created_on, profile_image_url = "", active = False, is_admin = False):
         self.id = id
         self.firstName = first_name
         self.lastName = last_name
