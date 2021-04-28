@@ -1,3 +1,4 @@
+from models import post
 from reactions.request import add_reaction, create_reaction
 from comments.request import delete_comment, update_comment
 import json
@@ -10,7 +11,7 @@ from posts import ( get_posts_by_user_id,
                     update_post,
                     approve_post )
 from comments import create_comment, get_all_comments
-from users import register_new_user, existing_user_check, get_all_users, get_user_by_id, deactivate_user, activate_user
+from users import register_new_user, existing_user_check, get_all_users, get_user_by_id, deactivate_user, activate_user, change_user_type
 from categories import get_all_categories, create_category, delete_category, update_category
 from tags import create_tag, get_all_tags, delete_tag, update_tag
 
@@ -160,6 +161,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
         if resource == "approve":
             success = approve_post(id)
+        if resource == "users":
+            success = change_user_type(id, post_body)
         # rest of the elif's
 
         if success:
