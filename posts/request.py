@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Post, Tag
+from models import Post, Tag, Comment
 
 def get_all_posts():
 
@@ -161,6 +161,25 @@ def get_post_by_id(id):
                         tag_row['label'])
             post_tags.append(post_tag.__dict__)
         post.tags = post_tags
+
+        db_cursor.execute("""
+        SELECT
+            c.id,
+            c.post_id,
+            c.author_id,
+            c.content,
+            c.subject,
+            c.created_on
+        FROM Comments c
+        WHERE c.post_id = ?
+        """, (id, ))
+        comments = []
+        dataset = db_cursor.fetchall()
+        for data in dataset:
+            comment = Comment(data['id'], data['post_id'], data['author_id'],
+                        data['content'], data['subject'], data['created_on'])
+            comments.append(comment.__dict__)
+        post.comments = comments
     return json.dumps(post.__dict__)
 
 def create_post(new_post):
