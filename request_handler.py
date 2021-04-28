@@ -9,7 +9,8 @@ from posts import ( get_posts_by_user_id,
                     delete_post,
                     update_post,
                     approve_post,
-                    subscribing_to_post )
+                    subscribing_to_post,
+                    get_subscribed_posts_by_id )
 from comments import create_comment, get_all_comments
 from users import register_new_user, existing_user_check, get_all_users
 from categories import get_all_categories, create_category, delete_category, update_category
@@ -87,6 +88,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     pass
                 else:
                     response = get_all_comments()
+            elif resource == "subscriptions":
+                if id is not None:
+                    response = get_subscribed_posts_by_id(id)
+                else:
+                    pass
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
         # `/resource?parameter=value`

@@ -159,3 +159,50 @@ WHERE pt.post_id = 1
 Select is_admin
 FROM Users
 WHERE id = 2
+
+SELECT
+    p.id,
+    p.user_id,
+    p.category_id,
+    p.title,
+    p.publication_date,
+    p.image_url,
+    p.content,
+    p.approved,
+    s.id as subscription_id,
+    s.follower_id,
+    s.author_id,
+    s.created_on,
+    s.ended_on
+FROM posts p
+JOIN subscriptions s
+    ON s.author_id = p.user_id
+WHERE s.follower_id = 6
+AND s.ended_on = "" OR s.ended_on IS NULL
+
+INSERT INTO Subscriptions (id, follower_id, author_id, created_on, ended_on)
+VALUES ( 50, 5, 6, '2021-04-02T23:57:07.374Z', '' );
+INSERT INTO Subscriptions (id, follower_id, author_id, created_on, ended_on)
+VALUES ( 51, 6, 5, '2021-04-02T23:57:07.374Z', '' );
+
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') 
+VALUES (50, 5, 1, 'Title#1', '2021-04-02T23:57:07.374Z', '', 'Post Text #1', 1);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') 
+VALUES (51, 5, 1, 'Title#2', '2022-04-02T23:57:07.374Z', '', 'Post Text #2', 0);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') 
+VALUES (52, 5, 1, 'Title#3', '2023-04-02T23:57:07.374Z', '', 'Post Text #3', 1);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') 
+VALUES (53, 6, 1, 'Title#4', '2024-04-02T23:57:07.374Z', '', 'Post Text #4', 0);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') 
+VALUES (54, 6, 1, 'Title#5', '2025-04-02T23:57:07.374Z', '', 'Post Text #5', 1);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') 
+VALUES (55, 6, 1, 'Title#6', '2026-04-02T23:57:07.374Z', '', 'Post Text #6', 0);
+
+INSERT INTO Users
+  ('id', 'first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on', 'active', 'is_admin')
+VALUES  
+  (5, 'fifth', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, True);
+INSERT INTO Users
+  ('id', 'first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on', 'active', 'is_admin')
+VALUES  
+  (6, 'sixth', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, False);
