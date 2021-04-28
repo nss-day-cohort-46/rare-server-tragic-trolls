@@ -40,9 +40,12 @@ def register_new_user(new_user):
 
         id = db_cursor.lastrowid
 
-        new_user_object["id"] = id
+        response = {
+            "valied": "valid",
+            "token": id
+        }
 
-        return json.dumps(new_user_object)
+        return json.dumps(response)
 
 def existing_user_check(login_info):
     with sqlite3.connect("./rare.db") as conn:
@@ -191,14 +194,4 @@ def change_user_type(user_body):
         else:
             return False
 
-# {"first_name": "tragic",
-# "last_name": "troll",
-# "display_name": "t_troll",
-# "email": "tragic@troll.com",
-# "bio": "tragic",
-# "username": "tragic@troll.com",
-# "password": "password",
-# "created_on": 12/23/2020,
-# "profile_image_url": "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
-# }
 
