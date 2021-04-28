@@ -10,7 +10,7 @@ from posts import ( get_posts_by_user_id,
                     update_post,
                     approve_post )
 from comments import create_comment, get_all_comments
-from users import register_new_user, existing_user_check
+from users import register_new_user, existing_user_check, get_all_users
 from categories import get_all_categories, create_category, delete_category, update_category
 from tags import create_tag, get_all_tags, delete_tag, update_tag
 
@@ -60,6 +60,12 @@ class HandleRequests(BaseHTTPRequestHandler):
         parsed = self.parse_url(self.path)
         if len(parsed) == 2:
             ( resource, id ) = parsed
+
+            if resource == "users":
+                if id is not None:
+                    response = get_single_user(id)
+                else:
+                    response = get_all_users()
             if resource == "categories":
                 if id is not None:
                     pass

@@ -1,2 +1,3 @@
 from .request import (register_new_user,
-                        existing_user_check)
+                        existing_user_check,
+                        get_all_users)

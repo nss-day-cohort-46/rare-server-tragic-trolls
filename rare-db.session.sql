@@ -2,13 +2,23 @@ CREATE TABLE "Users" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "first_name" varchar,
   "last_name" varchar,
+  "username" varchar,
+  "display_name" varchar,
   "email" varchar,
   "bio" varchar,
-  "username" varchar,
   "password" varchar,
   "profile_image_url" varchar,
   "created_on" date,
-  "active" bit
+  "active" bit,
+  "is_admin" bit
+);
+
+DROP TABLE Users;
+
+INSERT INTO Users
+VALUES 
+( NULL, "test", "user", "test@user.com", "test", "test@user.com",
+  "bio", "password", "", "2020-01-03", TRUE, FALSE
 );
 
 CREATE TABLE "DemotionQueue" (
