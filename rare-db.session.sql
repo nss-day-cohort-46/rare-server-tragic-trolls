@@ -109,3 +109,32 @@ SELECT * FROM Comments
 DELETE FROM Comments
 
 DROP TABLE Comments
+
+SELECT 
+  COUNT(reaction_id),
+  pr.id,
+  pr.user_id,
+  pr.reaction_id,
+  pr.post_id
+FROM PostReactions pr
+JOIN Posts p on p.id = pr.post_id
+WHERE p.id = 1
+GROUP BY pr.reaction_id
+
+SELECT 
+  COUNT(reaction_id),
+  pr.id,
+  pr.user_id,
+  pr.reaction_id,
+  pr.post_id
+FROM PostReactions pr
+JOIN Reactions r on r.id = pr.reaction_id
+GROUP BY pr.reaction_id
+
+SELECT 
+  *,
+  COUNT(reaction_id)
+FROM PostReactions pr
+JOIN Reactions r on r.id = pr.reaction_id
+WHERE post_id = 1
+GROUP BY pr.reaction_id
