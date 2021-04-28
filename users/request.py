@@ -61,6 +61,7 @@ def get_all_users():
 
         db_cursor.execute(""" 
         SELECT 
+            u.id,
             u.first_name,
             u.last_name,
             u.display_name,
@@ -73,7 +74,8 @@ def get_all_users():
         users = []
 
         for row in dataset:
-            user = User(first_name = row["first_name"], 
+            user = User(id = row["id"],
+                        first_name = row["first_name"], 
                         last_name = row["last_name"], 
                         display_name = row["display_name"], 
                         user_name = None, 
