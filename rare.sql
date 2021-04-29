@@ -112,12 +112,12 @@ INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 
-INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 1, 1, 'Title#1', '2021-04-02T23:57:07.374Z', 'https://res.cloudinary.com/nch66862/image/upload/v1617690859/man19_mfb18l.jpg', 'Post Text #1', 1);
-INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 2, 1, 'Title#2', '2022-04-02T23:57:07.374Z', 'https://res.cloudinary.com/nch66862/image/upload/v1617690859/man19_mfb18l.jpg', 'Post Text #2', 0);
-INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 1, 1, 'Title#3', '2023-04-02T23:57:07.374Z', 'https://res.cloudinary.com/nch66862/image/upload/v1617690859/man19_mfb18l.jpg', 'Post Text #3', 1);
-INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 2, 1, 'Title#4', '2024-04-02T23:57:07.374Z', 'https://res.cloudinary.com/nch66862/image/upload/v1617690859/man19_mfb18l.jpg', 'Post Text #4', 0);
-INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 1, 1, 'Title#5', '2025-04-02T23:57:07.374Z', 'https://res.cloudinary.com/nch66862/image/upload/v1617690859/man19_mfb18l.jpg', 'Post Text #5', 1);
-INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 2, 1, 'Title#6', '2026-04-02T23:57:07.374Z', 'https://res.cloudinary.com/nch66862/image/upload/v1617690859/man19_mfb18l.jpg', 'Post Text #6', 0);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 1, 2, 'Title#1', '2021-04-02T23:57:07.374Z', '', 'Post Text #1', 1);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 2, 3, 'Title#2', '2022-04-02T23:57:07.374Z', '', 'Post Text #2', 0);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 1, 4, 'Title#3', '2023-04-02T23:57:07.374Z', '', 'Post Text #3', 1);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 2, 2, 'Title#4', '2024-04-02T23:57:07.374Z', '', 'Post Text #4', 0);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 1, 3, 'Title#5', '2025-04-02T23:57:07.374Z', '', 'Post Text #5', 1);
+INSERT INTO Posts ('id', 'user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (Null, 2, 4, 'Title#6', '2026-04-02T23:57:07.374Z', '', 'Post Text #6', 0);
 
 
 DROP TABLE Posts
