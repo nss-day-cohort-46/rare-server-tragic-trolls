@@ -182,12 +182,37 @@ def get_post_by_id(id):
             p.publication_date,
             p.image_url,
             p.content,
-            p.approved
+            p.approved,
+            c.id as the_category_id,
+            c.label,
+            u.id as the_user_id,
+            u.first_name,
+            u.last_name,
+            u.display_name,
+            u.is_admin,
+            u.active
         FROM posts p
+        JOIN categories c 
+            ON p.category_id = the_category_id
+        JOIN users u
+            ON p.user_id = the_user_id
         WHERE p.id = ?
         """, (id, ))
 
         single_post = db_cursor.fetchone()
+        category = Category(single_post['the_category_id'],
+                                single_post['label'])
+        user = User(id = single_post["the_user_id"],
+                    first_name = single_post["first_name"], 
+                    last_name = single_post["last_name"], 
+                    display_name = single_post["display_name"], 
+                    username = None, 
+                    password = None,
+                    email = None, 
+                    bio = None, 
+                    created_on = None, 
+                    is_admin = single_post["is_admin"],
+                    active = single_post["active"])
         post = Post(single_post['id'], 
                     single_post['user_id'], 
                     single_post['category_id'],
@@ -196,6 +221,8 @@ def get_post_by_id(id):
                     single_post['image_url'], 
                     single_post['content'], 
                     single_post['approved'])
+        post.user = user.__dict__
+        post.category = category.__dict__
         db_cursor.execute("""
         SELECT
             pt.id,
@@ -215,7 +242,6 @@ def get_post_by_id(id):
                         tag_row['label'])
             post_tags.append(post_tag.__dict__)
         post.tags = post_tags
-
         db_cursor.execute("""
         SELECT
             c.id,
@@ -491,7 +517,6 @@ def get_posts_by_category_id(category_id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
-
         # Write the SQL query to get the information you want
         db_cursor.execute("""
         SELECT
@@ -502,8 +527,20 @@ def get_posts_by_category_id(category_id):
             p.publication_date,
             p.image_url,
             p.content,
-            p.approved
+            p.approved,
+            c.id as the_category_id,
+            c.label,
+            u.id as the_user_id,
+            u.first_name,
+            u.last_name,
+            u.display_name,
+            u.is_admin,
+            u.active
         FROM posts p
+        JOIN categories c 
+            ON p.category_id = the_category_id
+        JOIN users u
+            ON p.user_id = the_user_id
         WHERE p.category_id = ?
         """, (category_id, ))
 
@@ -511,6 +548,19 @@ def get_posts_by_category_id(category_id):
         dataset = db_cursor.fetchall()
 
         for row in dataset:
+            category = Category(row['the_category_id'],
+                        row['label'])
+            user = User(id = row["the_user_id"],
+                        first_name = row["first_name"], 
+                        last_name = row["last_name"], 
+                        display_name = row["display_name"], 
+                        username = None, 
+                        password = None,
+                        email = None, 
+                        bio = None, 
+                        created_on = None, 
+                        is_admin = row["is_admin"],
+                        active = row["active"])
             post = Post(row['id'], 
                         row['user_id'], 
                         row['category_id'],
@@ -519,6 +569,9 @@ def get_posts_by_category_id(category_id):
                         row['image_url'], 
                         row['content'], 
                         row['approved'])
+            post.user = user.__dict__
+            post.category = category.__dict__
+
             db_cursor.execute("""
             SELECT
                 pt.id,
@@ -561,8 +614,20 @@ def get_posts_by_tag_id(tag_id):
             p.approved,
             pt.id as post_tag_id,
             pt.post_id,
-            pt.tag_id
+            pt.tag_id,
+            c.id as the_category_id,
+            c.label,
+            u.id as the_user_id,
+            u.first_name,
+            u.last_name,
+            u.display_name,
+            u.is_admin,
+            u.active
         FROM posts p
+        JOIN categories c 
+            ON p.category_id = the_category_id
+        JOIN users u
+            ON p.user_id = the_user_id
         JOIN PostTags pt
             ON p.id = pt.post_id
         WHERE tag_id = ?
@@ -572,6 +637,19 @@ def get_posts_by_tag_id(tag_id):
         dataset = db_cursor.fetchall()
 
         for row in dataset:
+            category = Category(row['the_category_id'],
+                        row['label'])
+            user = User(id = row["the_user_id"],
+                        first_name = row["first_name"], 
+                        last_name = row["last_name"], 
+                        display_name = row["display_name"], 
+                        username = None, 
+                        password = None,
+                        email = None, 
+                        bio = None, 
+                        created_on = None, 
+                        is_admin = row["is_admin"],
+                        active = row["active"])
             post = Post(row['id'], 
                         row['user_id'], 
                         row['category_id'],
@@ -580,6 +658,8 @@ def get_posts_by_tag_id(tag_id):
                         row['image_url'], 
                         row['content'], 
                         row['approved'])
+            post.user = user.__dict__
+            post.category = category.__dict__
             db_cursor.execute("""
             SELECT
                 pt.id,
