@@ -432,8 +432,20 @@ def get_subscribed_posts_by_id(id):
             s.follower_id,
             s.author_id,
             s.created_on,
-            s.ended_on
+            s.ended_on,
+            c.id as the_category_id,
+            c.label,
+            u.id as the_user_id,
+            u.first_name,
+            u.last_name,
+            u.display_name,
+            u.is_admin,
+            u.active
         FROM posts p
+        LEFT JOIN categories c 
+            ON p.category_id = the_category_id
+        LEFT JOIN users u
+            ON p.user_id = the_user_id
         JOIN subscriptions s
             ON s.author_id = p.user_id
         WHERE s.follower_id = ?
@@ -444,6 +456,19 @@ def get_subscribed_posts_by_id(id):
         dataset = db_cursor.fetchall()
 
         for row in dataset:
+            category = Category(row['the_category_id'],
+                                    row['label'])
+            user = User(id = row["the_user_id"],
+                        first_name = row["first_name"], 
+                        last_name = row["last_name"], 
+                        display_name = row["display_name"], 
+                        username = None, 
+                        password = None,
+                        email = None, 
+                        bio = None, 
+                        created_on = None, 
+                        is_admin = row["is_admin"],
+                        active = row["active"])
             post = Post(row['id'], 
                         row['user_id'], 
                         row['category_id'],
@@ -452,6 +477,8 @@ def get_subscribed_posts_by_id(id):
                         row['image_url'], 
                         row['content'], 
                         row['approved'])
+            post.user = user.__dict__
+            post.category = category.__dict__
             db_cursor.execute("""
             SELECT
                 pt.id,
