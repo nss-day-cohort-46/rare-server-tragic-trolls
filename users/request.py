@@ -178,3 +178,29 @@ def activate_user(id):
             success = True
         
         return(success)
+
+def change_user_type(id, user_info):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        is_admin = None
+
+        if user_info["isAdmin"].title() == "False":
+            is_admin = False
+        elif user_info["isAdmin"].title() == "True":
+            is_admin = True
+        else: 
+            return False
+
+        db_cursor.execute(""" 
+        UPDATE Users
+        SET is_admin = ?
+        WHERE id = ?
+        """, (is_admin, id,))
+
+        rows_affected = db_cursor.rowcount
+
+        if rows_affected > 0:
+            return True
+        else:
+            return False
