@@ -104,4 +104,8 @@ INSERT INTO Posts ('user_id', 'category_id', 'title', 'publication_date', 'image
 INSERT INTO comments ('post_id', 'author_id', 'content', 'subject', 'created_on') VALUES (1, 1, 'test', 'test', '2021-01-01')
 
 
-SELECT * FROM PostReactions
+SELECT * FROM Comments
+
+DELETE FROM Comments
+
+DROP TABLE Comments
