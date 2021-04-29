@@ -256,3 +256,4 @@ def get_users_by_profile_type(query):
             users.append(user.__dict__)
         
         return json.dumps(users)
+            return False

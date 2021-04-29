@@ -6,3 +6,4 @@ from .request import (register_new_user,
                         activate_user,
                         change_user_type,
                         get_users_by_profile_type)
+                        change_user_type)
