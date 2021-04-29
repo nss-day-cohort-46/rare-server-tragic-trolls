@@ -192,7 +192,7 @@ def create_post(new_post):
         Select is_admin
         FROM Users
         WHERE id = ?
-        """, ( new_post['userId'], ))
+        """, ( new_post['user_id'], ))
         thePostCreator = db_cursor.fetchone()
         if thePostCreator[0] == 1:
             new_post['approved'] = 1
@@ -207,17 +207,17 @@ def create_post(new_post):
                 approved )
         VALUES
             ( ?, ?, ?, ?, ?, ?, ? );
-        """, (new_post['userId'], 
-                new_post['categoryId'],
+        """, (new_post['user_id'], 
+                new_post['category_id'],
                 new_post['title'],
-                new_post['publicationDate'], 
-                new_post['imageUrl'],
+                new_post['publication_date'], 
+                new_post['image_url'],
                 new_post['content'],
                 new_post['approved'], )
         )
         new_id = db_cursor.lastrowid
-        if new_post['tagIds']:
-            for tag_id in new_post['tagIds']:
+        if new_post['tag_ids']:
+            for tag_id in new_post['tag_ids']:
                 db_cursor.execute("""
                 INSERT INTO PostTags
                     ( post_id, tag_id )
@@ -250,7 +250,7 @@ def update_post(id, put_body):
             Select is_admin
             FROM Users
             WHERE id = ?
-            """, ( put_body['userId'], ))
+            """, ( put_body['user_id'], ))
             thePostCreator = db_cursor.fetchone()
             if thePostCreator[0] == 0:
                 put_body['approved'] = False
@@ -265,23 +265,23 @@ def update_post(id, put_body):
                 content = ?,
                 approved = ?
         WHERE id = ?
-        """, ( put_body['userId'], 
-                put_body['categoryId'],
+        """, ( put_body['user_id'], 
+                put_body['category_id'],
                 put_body['title'], 
-                put_body['publicationDate'],
-                put_body['imageUrl'], 
+                put_body['publication_date'],
+                put_body['image_url'], 
                 put_body['content'], 
                 put_body['approved'], 
                 id ))
         # Were any rows affected?
         # Did the client send an `id` that exists?
         rows_affected = db_cursor.rowcount
-        if put_body['tagIds']:
+        if put_body['tag_ids']:
             db_cursor.execute("""
             DELETE FROM PostTags
             WHERE post_id = ?
             """, (id, ))
-            for tag_id in put_body['tagIds']:
+            for tag_id in put_body['tag_ids']:
                 db_cursor.execute("""
                 INSERT INTO PostTags
                     ( post_id, tag_id )
@@ -513,6 +513,62 @@ def get_posts_by_tag_id(tag_id):
             ON p.id = pt.post_id
         WHERE tag_id = ?
         """, (tag_id, ))
+
+        posts = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            post = Post(row['id'], 
+                        row['user_id'], 
+                        row['category_id'],
+                        row['title'], 
+                        row['publication_date'],
+                        row['image_url'], 
+                        row['content'], 
+                        row['approved'])
+            db_cursor.execute("""
+            SELECT
+                pt.id,
+                pt.post_id,
+                pt.tag_id,
+                t.id,
+                t.label
+            FROM PostTags pt
+            JOIN Tags t
+                ON t.id = pt.tag_id
+            WHERE pt.post_id = ?
+            """, ( row['id'], ))
+            post_tags = []
+            tagdataset = db_cursor.fetchall()
+            for tag_row in tagdataset:
+                post_tag = Tag(tag_row['tag_id'], 
+                            tag_row['label'])
+                post_tags.append(post_tag.__dict__)
+            post.tags = post_tags
+            posts.append(post.__dict__)
+
+    return json.dumps(posts)
+
+def get_posts_by_title_search(search_term):
+
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        SELECT
+            p.id,
+            p.user_id,
+            p.category_id,
+            p.title,
+            p.publication_date,
+            p.image_url,
+            p.content,
+            p.approved
+        FROM posts p
+        WHERE title LIKE ?
+        """, (f'%{search_term}%', ))
 
         posts = []
         dataset = db_cursor.fetchall()
