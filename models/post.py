@@ -11,3 +11,5 @@ class Post():
         self.approved = bool(approved)
         self.tags = None
         self.comments = None
+        self.user = None
+        self.category = None
