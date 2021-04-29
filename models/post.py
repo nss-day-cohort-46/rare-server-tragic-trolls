@@ -10,3 +10,4 @@ class Post():
         self.content = content
         self.approved = bool(approved)
         self.tags = None
+        self.comments = None
