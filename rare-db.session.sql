@@ -115,19 +115,3 @@ INSERT INTO users
         VALUES
             ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'Wednesday, April 28, 2021', 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png', FALSE, FALSE);
 
-SELECT * from Subscriptions;
-
-SELECT
-            u.id user_id,
-            u.first_name,
-            u.last_name,
-            u.profile_image_url,
-            u.display_name,
-            u.email,
-            u.created_on created_user_on,
-            u.is_admin,
-            u.active,
-            s.follower_id
-        FROM Users u
-        JOIN Subscriptions s
-        WHERE user_id = 1 and s.author_id = 1 and s.ended_on = ""

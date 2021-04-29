@@ -169,15 +169,13 @@ class HandleRequests(BaseHTTPRequestHandler):
         elif resource == "posts":
             success = update_post(id, post_body)
         # rest of the elif's
-        self.wfile.write("".encode())
 
-        if success == True:
+        if success:
             self._set_headers(204)
-        elif success == False:
-            self._set_headers(404)
         else:
             self._set_headers(404)
-            self.wfile.write(success.encode())
+
+        self.wfile.write("".encode())
 
     def do_PATCH(self):
         content_len = int(self.headers.get('content-length', 0))

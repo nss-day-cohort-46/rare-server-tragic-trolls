@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import User, user
+from models import User
 
 def register_new_user(new_user):
     with sqlite3.connect("./rare.db") as conn:
@@ -153,104 +153,41 @@ def get_user_by_id(id):
                     is_admin = data["is_admin"],
                     profile_image_url = data["profile_image_url"],
                     active = data["active"])
-
-        user = user.__dict__
-                    
-        db_cursor.execute(""" 
-        SELECT
-            s.id
-        FROM Subscriptions s
-        WHERE author_id = ? and ended_on = ""
-        """, (id,))
-
-        subscription_dataset = db_cursor.fetchall()
-
-        subscriber_count = []
-
-        for subscription_id in subscription_dataset:
-            subscriber_count.append(subscription_id)
-        user["subscribers"] = len(subscriber_count)
         
-        return json.dumps(user)
+        return json.dumps(user.__dict__)
 
 def change_active_status(id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
-        rows_affected = None
+        db_cursor.execute(""" 
+        UPDATE Users
+        SET active = NOT active
+        WHERE id = ?
+        """, (id,))
 
-        user_to_change = json.loads(get_user_by_id(id))
+        rows_affected = db_cursor.rowcount
 
-        if user_to_change["active"] and user_to_change["isAdmin"] == True:
-            db_cursor.execute(""" 
-            SELECT
-                u.id
-            FROM users u
-            WHERE is_admin = True and active = True
-            """)
-            dataset = db_cursor.fetchall()
-
-            admin_users = []
-
-            for row in dataset:
-                admin_users.append(row["id"])
-
-            if len(admin_users) == 1:
-                return "Error: Must have at least one active admin user at all times"
-
-            else:
-                db_cursor.execute(""" 
-                UPDATE Users
-                SET active = NOT active
-                WHERE id = ?
-                """, (id,))
-
-                rows_affected = db_cursor.rowcount
-        else:        
-            db_cursor.execute(""" 
-            UPDATE Users
-            SET active = NOT active
-            WHERE id = ?
-            """, (id,))
-
-            rows_affected = db_cursor.rowcount
+        success = False
 
         if rows_affected > 0:
-            return True
-        else: 
-            return False
+            success = True
         
+        return(success)
+
 def change_user_type(user_body):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
-        rows_affected = None
+        db_cursor.execute(""" 
+        UPDATE Users
+        SET is_admin = NOT is_admin
+        WHERE id = ?
+        """, (int(user_body["id"]),))
 
-        user_to_change = json.loads(get_user_by_id(int(user_body["id"])))
-
-        if user_to_change["isAdmin"] == True:
-            admin_users = json.loads(get_users_by_profile_type("True"))
-            if len(admin_users) == 1:
-                return "Error: Must have at least one active admin user at all times"
-
-            else:
-                db_cursor.execute(""" 
-                UPDATE Users
-                SET is_admin = NOT is_admin
-                WHERE id = ?
-                """, (int(user_body["id"]),))
-
-                rows_affected = db_cursor.rowcount
-        else:
-            db_cursor.execute(""" 
-            UPDATE Users
-            SET is_admin = NOT is_admin
-            WHERE id = ?
-            """, (int(user_body["id"]),))
-
-            rows_affected = db_cursor.rowcount
+        rows_affected = db_cursor.rowcount
 
         if rows_affected > 0:
             return True
