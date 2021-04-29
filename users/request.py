@@ -230,8 +230,8 @@ def change_user_type(user_body):
 
         user_to_change = json.loads(get_user_by_id(int(user_body["admin_id"])))
 
-        if user_to_change["isAdmin"] == True:
-            if user_body["admin_id"] != user_body["approver_one_id"]:
+        if user_body["admin_id"] != user_body["approver_one_id"]:
+            if user_to_change["isAdmin"] == True:
                 db_cursor.execute(""" 
                 SELECT COUNT(*)
                 FROM DemotionQueue
@@ -248,7 +248,7 @@ def change_user_type(user_body):
                     VALUES (?,?,?)
                     """, (user_body["action"], int(user_body["admin_id"]), int(user_body["approver_one_id"])))
 
-                    rows_affected = db_cursor.rowcount
+                    return f"Successfully submitted approval 1 of 2 to demote user with id {user_body['admin_id']}"
                 else:
                     db_cursor.execute(""" 
                     UPDATE Users
@@ -256,23 +256,23 @@ def change_user_type(user_body):
                     WHERE id = ?
                     """, (int(user_body["admin_id"]),))
 
-                    rows_affected = db_cursor.rowcount
-
                     db_cursor.execute(""" 
                     DELETE FROM DemotionQueue
                     WHERE admin_id = ?
                     """, (user_to_change["id"],))
+
+                    return f"Succesfully demoted user with id {user_body['admin_id']}"
+
             else:
-                return "Error: Admin cannot approve their own status change"
+                db_cursor.execute(""" 
+                UPDATE Users
+                SET is_admin = NOT is_admin
+                WHERE id = ?
+                """, (int(user_body["admin_id"]),))
 
+                rows_affected = db_cursor.rowcount
         else:
-            db_cursor.execute(""" 
-            UPDATE Users
-            SET is_admin = NOT is_admin
-            WHERE id = ?
-            """, (int(user_body["admin_id"]),))
-
-            rows_affected = db_cursor.rowcount
+            return "Error: Admin cannot approve their own status change"
 
         if rows_affected > 0:
             return True
