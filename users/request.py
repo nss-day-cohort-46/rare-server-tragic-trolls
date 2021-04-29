@@ -181,18 +181,31 @@ def change_user_type(user_body):
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
-        user_to_change = get_user_by_id(int(user_body["id"]))
+        rows_affected = None
 
-        if user_to_change["is_admin"] == True:
-            admin_users = get_users_by_profile_type("True")
+        user_to_change = json.loads(get_user_by_id(int(user_body["id"])))
 
-        db_cursor.execute(""" 
-        UPDATE Users
-        SET is_admin = NOT is_admin
-        WHERE id = ?
-        """, (int(user_body["id"]),))
+        if user_to_change["isAdmin"] == True:
+            admin_users = json.loads(get_users_by_profile_type("True"))
+            if len(admin_users) == 1:
+                return "Error: Must have at least one admin user at all times"
 
-        rows_affected = db_cursor.rowcount
+            else:
+                db_cursor.execute(""" 
+                UPDATE Users
+                SET is_admin = NOT is_admin
+                WHERE id = ?
+                """, (int(user_body["id"]),))
+
+                rows_affected = db_cursor.rowcount
+        else:
+            db_cursor.execute(""" 
+            UPDATE Users
+            SET is_admin = NOT is_admin
+            WHERE id = ?
+            """, (int(user_body["id"]),))
+
+            rows_affected = db_cursor.rowcount
 
         if rows_affected > 0:
             return True
