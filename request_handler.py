@@ -16,7 +16,14 @@ from posts import ( get_posts_by_user_id,
                     get_posts_by_category_id,
                     get_posts_by_tag_id )
 from comments import create_comment, get_all_comments
-from users import register_new_user, existing_user_check, get_all_users, get_user_by_id, deactivate_user, activate_user, change_user_type
+from users import (register_new_user, 
+                    existing_user_check, 
+                    get_all_users, 
+                    get_user_by_id, 
+                    deactivate_user, 
+                    activate_user, 
+                    change_user_type, 
+                    get_users_by_profile_type)
 from categories import get_all_categories, create_category, delete_category, update_category
 from tags import create_tag, get_all_tags, delete_tag, update_tag
 
@@ -104,6 +111,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             ( resource, key, value ) = parsed
             if key == "userId" and resource == "posts":
                 response = get_posts_by_user_id(value)
+            if key.lower() == "isadmin" and resource == "users":
+                response = get_users_by_profile_type(value)
             elif key == "categoryId" and resource == "posts":
                 response = get_posts_by_category_id(value)
             elif key == "tagId" and resource == "posts":
