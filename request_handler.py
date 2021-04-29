@@ -23,7 +23,8 @@ from users import (register_new_user,
                     get_user_by_id, 
                     change_active_status,
                     change_user_type, 
-                    get_users_by_profile_type)
+                    get_users_by_profile_type,
+                    check_subscribed)
 from categories import get_all_categories, create_category, delete_category, update_category
 from tags import create_tag, get_all_tags, delete_tag, update_tag
 
@@ -62,7 +63,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods',
-                         'GET, POST, PUT, DELETE')
+                         'GET, POST, PUT, DELETE, PATCH')
         self.send_header('Access-Control-Allow-Headers',
                          'X-Requested-With, Content-Type, Accept')
         self.end_headers()
@@ -147,6 +148,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_creation = create_category(post_body)
         elif resource == "subscriptions":
             new_creation = subscribing_to_post(post_body)
+        elif resource == "subscribed":
+            new_creation = check_subscribed(post_body)
 
         self.wfile.write(new_creation.encode())
 

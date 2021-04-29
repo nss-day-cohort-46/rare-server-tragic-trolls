@@ -48,12 +48,12 @@ CREATE TABLE "Subscriptions" (
   "follower_id" INTEGER,
   "author_id" INTEGER,
   "created_on" date,
+  "ended_on" date,
   FOREIGN KEY(`follower_id`) REFERENCES `Users`(`id`),
   FOREIGN KEY(`author_id`) REFERENCES `Users`(`id`)
 );
 
-ALTER TABLE Subscriptions ADD COLUMN "ended_on" DATE;
-
+DROP TABLE Subscriptions;
 CREATE TABLE "Posts" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "user_id" INTEGER,

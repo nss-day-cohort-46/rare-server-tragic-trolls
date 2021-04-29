@@ -308,3 +308,16 @@ def get_users_by_profile_type(query):
             users.append(user.__dict__)
         
         return json.dumps(users)
+def check_subscribed(subscribeCheck):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        db_cursor.execute("""
+        SELECT * FROM subscriptions s
+        Where follower_id = ? and author_id = ? and ended_on = ""
+        """,(subscribeCheck['follower_id'], subscribeCheck['author_id']))
+        data = db_cursor.fetchall()
+        if data :
+            return json.dumps({"subscribed":True})
+        else :
+            return json.dumps({"subscribed":False})
