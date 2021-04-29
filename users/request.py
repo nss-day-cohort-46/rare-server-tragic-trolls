@@ -194,4 +194,54 @@ def change_user_type(user_body):
         else:
             return False
 
+def get_users_by_profile_type(query):
+    with sqlite3.connect("./rare.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        boolean_query = None
 
+        users = []
+
+        if query.title() == "False":
+            boolean_query = 0
+        elif query.title() == "True":
+            boolean_query = 1
+        else: 
+            users = "Error: Query was not a boolean"
+
+        db_cursor.execute(""" 
+        SELECT
+            u.id,
+            u.first_name,
+            u.last_name,
+            u.profile_image_url,
+            u.display_name,
+            u.email,
+            u.created_on,
+            u.is_admin,
+            u.active,
+            u.username,
+            u.bio
+        FROM users u
+        WHERE is_admin = ?
+        """, (boolean_query,))
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            user = User(id = row["id"],
+                    first_name = row["first_name"], 
+                    last_name = row["last_name"], 
+                    display_name = row["display_name"], 
+                    username = row["username"], 
+                    password = None,
+                    email = row["email"], 
+                    bio = row["bio"], 
+                    created_on = row["created_on"], 
+                    is_admin = row["is_admin"],
+                    profile_image_url = row["profile_image_url"],
+                    active = row["active"])
+            
+            users.append(user.__dict__)
+        
+        return json.dumps(users)

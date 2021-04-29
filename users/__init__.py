@@ -1,6 +1,7 @@
-from .request import (register_new_user,
+from .request import (change_active_status, 
+                        register_new_user,
                         existing_user_check,
                         get_all_users,
                         get_user_by_id,
-                        change_active_status,
-                        change_user_type)
+                        change_user_type,
+                        get_users_by_profile_type)
