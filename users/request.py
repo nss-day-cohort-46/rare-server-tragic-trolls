@@ -228,27 +228,49 @@ def change_user_type(user_body):
 
         rows_affected = None
 
-        user_to_change = json.loads(get_user_by_id(int(user_body["id"])))
+        user_to_change = json.loads(get_user_by_id(int(user_body["admin_id"])))
 
         if user_to_change["isAdmin"] == True:
-            admin_users = json.loads(get_users_by_profile_type("True"))
-            if len(admin_users) == 1:
-                return "Error: Must have at least one active admin user at all times"
-
-            else:
+            if user_body["admin_id"] != user_body["approver_one_id"]:
                 db_cursor.execute(""" 
-                UPDATE Users
-                SET is_admin = NOT is_admin
-                WHERE id = ?
-                """, (int(user_body["id"]),))
+                SELECT COUNT(*)
+                FROM DemotionQueue
+                WHERE admin_id = ?
+                """, (user_to_change["id"],))
 
-                rows_affected = db_cursor.rowcount
+                count = db_cursor.fetchone()[0]
+
+                if count == 0:
+                    # create new demotionqueue
+                    db_cursor.execute(""" 
+                    INSERT INTO DemotionQueue
+                        (action, admin_id, approver_one_id)
+                    VALUES (?,?,?)
+                    """, (user_body["action"], int(user_body["admin_id"]), int(user_body["approver_one_id"])))
+
+                    rows_affected = db_cursor.rowcount
+                else:
+                    db_cursor.execute(""" 
+                    UPDATE Users
+                    SET is_admin = NOT is_admin
+                    WHERE id = ?
+                    """, (int(user_body["admin_id"]),))
+
+                    rows_affected = db_cursor.rowcount
+
+                    db_cursor.execute(""" 
+                    DELETE FROM DemotionQueue
+                    WHERE admin_id = ?
+                    """, (user_to_change["id"],))
+            else:
+                return "Error: Admin cannot approve their own status change"
+
         else:
             db_cursor.execute(""" 
             UPDATE Users
             SET is_admin = NOT is_admin
             WHERE id = ?
-            """, (int(user_body["id"]),))
+            """, (int(user_body["admin_id"]),))
 
             rows_affected = db_cursor.rowcount
 
