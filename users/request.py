@@ -233,12 +233,15 @@ def change_user_type(user_body):
         if user_body["admin_id"] != user_body["approver_one_id"]:
             if user_to_change["isAdmin"] == True:
                 db_cursor.execute(""" 
-                SELECT COUNT(*)
+                SELECT COUNT(*), approver_one_id
                 FROM DemotionQueue
                 WHERE admin_id = ?
                 """, (user_to_change["id"],))
 
-                count = db_cursor.fetchone()[0]
+                data = db_cursor.fetchone()
+                count = data[0]
+
+                # approver_one = None
 
                 if count == 0:
                     # create new demotionqueue
@@ -248,20 +251,26 @@ def change_user_type(user_body):
                     VALUES (?,?,?)
                     """, (user_body["action"], int(user_body["admin_id"]), int(user_body["approver_one_id"])))
 
-                    return f"Successfully submitted approval 1 of 2 to demote user with id {user_body['admin_id']}"
+                    return True
                 else:
-                    db_cursor.execute(""" 
-                    UPDATE Users
-                    SET is_admin = NOT is_admin
-                    WHERE id = ?
-                    """, (int(user_body["admin_id"]),))
+                    # for row in data:
+                    #     approver_one = row["approver_one_id"]
 
-                    db_cursor.execute(""" 
-                    DELETE FROM DemotionQueue
-                    WHERE admin_id = ?
-                    """, (user_to_change["id"],))
+                    if int(user_body["approver_one_id"]) != data["approver_one_id"]:
+                        db_cursor.execute(""" 
+                        UPDATE Users
+                        SET is_admin = NOT is_admin
+                        WHERE id = ?
+                        """, (int(user_body["admin_id"]),))
 
-                    return f"Succesfully demoted user with id {user_body['admin_id']}"
+                        db_cursor.execute(""" 
+                        DELETE FROM DemotionQueue
+                        WHERE admin_id = ?
+                        """, (user_to_change["id"],))
+
+                        return True
+                    else:
+                        return "Demoting an admin user requires approval from 2 separate admin users"
 
             else:
                 db_cursor.execute(""" 
