@@ -28,9 +28,9 @@ def get_all_posts():
             u.is_admin,
             u.active
         FROM posts p
-        JOIN categories c 
+        LEFT JOIN categories c 
             ON p.category_id = the_category_id
-        JOIN users u
+        LEFT JOIN users u
             ON p.user_id = the_user_id
         """)
 
@@ -110,9 +110,9 @@ def get_posts_by_user_id(user_id):
             u.is_admin,
             u.active
         FROM posts p
-        JOIN categories c 
+        LEFT JOIN categories c 
             ON p.category_id = the_category_id
-        JOIN users u
+        LEFT JOIN users u
             ON p.user_id = the_user_id
         WHERE p.user_id = ?
         """, (user_id, ))
@@ -192,9 +192,9 @@ def get_post_by_id(id):
             u.is_admin,
             u.active
         FROM posts p
-        JOIN categories c 
+        LEFT JOIN categories c 
             ON p.category_id = the_category_id
-        JOIN users u
+        LEFT JOIN users u
             ON p.user_id = the_user_id
         WHERE p.id = ?
         """, (id, ))
@@ -537,9 +537,9 @@ def get_posts_by_category_id(category_id):
             u.is_admin,
             u.active
         FROM posts p
-        JOIN categories c 
+        LEFT JOIN categories c 
             ON p.category_id = the_category_id
-        JOIN users u
+        LEFT JOIN users u
             ON p.user_id = the_user_id
         WHERE p.category_id = ?
         """, (category_id, ))
@@ -624,9 +624,9 @@ def get_posts_by_tag_id(tag_id):
             u.is_admin,
             u.active
         FROM posts p
-        JOIN categories c 
+        LEFT JOIN categories c 
             ON p.category_id = the_category_id
-        JOIN users u
+        LEFT JOIN users u
             ON p.user_id = the_user_id
         JOIN PostTags pt
             ON p.id = pt.post_id
@@ -699,8 +699,20 @@ def get_posts_by_title_search(search_term):
             p.publication_date,
             p.image_url,
             p.content,
-            p.approved
+            p.approved,
+            c.id as the_category_id,
+            c.label,
+            u.id as the_user_id,
+            u.first_name,
+            u.last_name,
+            u.display_name,
+            u.is_admin,
+            u.active
         FROM posts p
+        LEFT JOIN categories c 
+            ON p.category_id = the_category_id
+        LEFT JOIN users u
+            ON p.user_id = the_user_id
         WHERE title LIKE ?
         """, (f'%{search_term}%', ))
 
@@ -708,6 +720,19 @@ def get_posts_by_title_search(search_term):
         dataset = db_cursor.fetchall()
 
         for row in dataset:
+            category = Category(row['the_category_id'],
+                        row['label'])
+            user = User(id = row["the_user_id"],
+                        first_name = row["first_name"], 
+                        last_name = row["last_name"], 
+                        display_name = row["display_name"], 
+                        username = None, 
+                        password = None,
+                        email = None, 
+                        bio = None, 
+                        created_on = None, 
+                        is_admin = row["is_admin"],
+                        active = row["active"])
             post = Post(row['id'], 
                         row['user_id'], 
                         row['category_id'],
@@ -716,6 +741,8 @@ def get_posts_by_title_search(search_term):
                         row['image_url'], 
                         row['content'], 
                         row['approved'])
+            post.user = user.__dict__
+            post.category = category.__dict__
             db_cursor.execute("""
             SELECT
                 pt.id,
