@@ -7,28 +7,45 @@ def register_new_user(new_user):
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor() 
 
+        new_user_object = User(id = None,
+                                first_name = new_user["first_name"],
+                                last_name = new_user["last_name"],
+                                display_name = new_user["display_name"],
+                                username = new_user["username"], 
+                                email = new_user["email"],
+                                password = new_user["password"],
+                                bio = new_user["bio"],
+                                created_on = new_user["created_on"],
+                                profile_image_url = new_user["profile_image_url"])
+
+        new_user_object = new_user_object.__dict__
+
         db_cursor.execute(""" 
         INSERT INTO users
-            ('first_name', 'last_name', 'display_name' 'email', 'bio', 'username', 'password', 'created_on', 'profile_image_url', 'is_admin')
+            ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'created_on', 'profile_image_url', 'is_admin', 'active')
         VALUES
-            (?,?,?,?,?,?,?, ?)
-        """, (new_user["firstName"], 
-                new_user["lastName"],
-                new_user["displayName"], 
-                new_user["email"], 
-                new_user["bio"], 
-                new_user["username"], 
-                new_user["password"], 
-                new_user["createdOn"],
-                new_user["profileImageUrl"],
-                new_user["isAdmin"]
+            (?,?,?,?,?,?,?,?,?,?,?)
+        """, (new_user_object["firstName"], 
+                new_user_object["lastName"],
+                new_user_object["displayName"], 
+                new_user_object["email"], 
+                new_user_object["bio"], 
+                new_user_object["username"], 
+                new_user_object["password"], 
+                new_user_object["createdOn"],
+                new_user_object["profileImageUrl"],
+                new_user_object["isAdmin"],
+                new_user_object["active"]
         ))
 
         id = db_cursor.lastrowid
 
-        new_user["id"] = id
+        response = {
+            "valid": "valid",
+            "token": id
+        }
 
-        return json.dumps(new_user)
+        return json.dumps(response)
 
 def existing_user_check(login_info):
     with sqlite3.connect("./rare.db") as conn:
@@ -139,14 +156,14 @@ def get_user_by_id(id):
         
         return json.dumps(user.__dict__)
 
-def deactivate_user(id):
+def change_active_status(id):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
         db_cursor.execute(""" 
         UPDATE Users
-        SET active = False
+        SET active = NOT active
         WHERE id = ?
         """, (id,))
 
@@ -159,44 +176,16 @@ def deactivate_user(id):
         
         return(success)
 
-def activate_user(id):
+def change_user_type(user_body):
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
         db_cursor.execute(""" 
         UPDATE Users
-        SET active = True
+        SET is_admin = NOT is_admin
         WHERE id = ?
-        """, (id,))
-
-        rows_affected = db_cursor.rowcount
-
-        success = False
-
-        if rows_affected > 0:
-            success = True
-        
-        return(success)
-
-def change_user_type(id, user_info):
-    with sqlite3.connect("./rare.db") as conn:
-        conn.row_factory = sqlite3.Row
-        db_cursor = conn.cursor()
-        is_admin = None
-
-        if user_info["isAdmin"].title() == "False":
-            is_admin = False
-        elif user_info["isAdmin"].title() == "True":
-            is_admin = True
-        else: 
-            return False
-
-        db_cursor.execute(""" 
-        UPDATE Users
-        SET is_admin = ?
-        WHERE id = ?
-        """, (is_admin, id,))
+        """, (int(user_body["id"]),))
 
         rows_affected = db_cursor.rowcount
 
@@ -256,4 +245,3 @@ def get_users_by_profile_type(query):
             users.append(user.__dict__)
         
         return json.dumps(users)
-            return False

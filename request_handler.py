@@ -20,8 +20,7 @@ from users import (register_new_user,
                     existing_user_check, 
                     get_all_users, 
                     get_user_by_id, 
-                    deactivate_user, 
-                    activate_user, 
+                    change_active_status,
                     change_user_type, 
                     get_users_by_profile_type)
 from categories import get_all_categories, create_category, delete_category, update_category
@@ -158,10 +157,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = update_tag(id, post_body)
         elif resource == "comments":
             success = update_comment(id, post_body)
-        if resource == "deactivate":
-            success = deactivate_user(id)
-        if resource == "activate":
-            success = activate_user(id)
+        if resource == "active_status":
+            success = change_active_status(id)
+        if resource == "user_type":
+            success = change_user_type(post_body)
         elif resource == "categories":
             success = update_category(id, post_body)
         elif resource == "posts":
