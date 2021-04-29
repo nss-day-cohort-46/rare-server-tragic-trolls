@@ -1,3 +1,4 @@
+from models.reaction import Reaction
 import sqlite3
 import json 
 
@@ -33,3 +34,26 @@ def create_reaction(new_reaction):
     new_reaction['id'] = id
 
   return json.dumps(new_reaction)
+
+def get_all_reactions():
+  with sqlite3.connect('./rare.db') as conn:
+    conn.row_factory = sqlite3.Row
+    db_cursor = conn.cursor()
+
+    db_cursor.execute("""
+    SELECT
+      r.id,
+      r.label,
+      r.image_url
+    FROM Reactions r
+    """)
+
+    reactions = []
+
+    dataset = db_cursor.fetchall()
+
+    for data in dataset:
+      reaction = Reaction(data['id'], data['label'], data['image_url'])
+      reactions.append(reaction.__dict__)
+
+    return json.dumps(reactions)

@@ -113,9 +113,9 @@ DROP TABLE Comments
 DROP TABLE PostReactions
 
 INSERT INTO Reactions ('label', 'image_url')
-VALUES ('what', '#');
+VALUES ('YeeHaw', 'https://res.cloudinary.com/nicecloudbro/image/upload/v1619711464/yeehaw_gft31j.png');
 INSERT INTO Reactions ('label', 'image_url')
-VALUES ('nice', '#');
+VALUES ('YeeNah', 'https://res.cloudinary.com/nicecloudbro/image/upload/v1619711737/yeenah_cs7dwm.png');
 INSERT INTO PostReactions ('user_id', 'reaction_id', 'post_id')
 VALUES (1, 1, 1);
 INSERT INTO PostReactions ('user_id', 'reaction_id', 'post_id')
@@ -123,3 +123,54 @@ VALUES (1, 1, 1);
 INSERT INTO PostReactions ('user_id', 'reaction_id', 'post_id')
 VALUES (1, 2, 1)
 
+
+INSERT INTO comments ('post_id', 'author_id', 'content', 'subject', 'created_on') VALUES (1, 1, 'test', 'test', '2021-01-01');
+
+
+SELECT * FROM Users;
+
+UPDATE Users
+        SET is_admin = NOT is_admin
+        WHERE id = 1;
+
+INSERT INTO users
+            ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'created_on', 'profile_image_url', 'is_admin', 'active')
+        VALUES
+            ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'Wednesday, April 28, 2021', 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png', FALSE, FALSE);
+
+DROP TABLE Comments
+
+SELECT 
+  COUNT(reaction_id),
+  pr.id,
+  pr.user_id,
+  pr.reaction_id,
+  pr.post_id
+FROM PostReactions pr
+JOIN Posts p on p.id = pr.post_id
+WHERE p.id = 1
+GROUP BY pr.reaction_id
+
+SELECT 
+  COUNT(reaction_id),
+  pr.id,
+  pr.user_id,
+  pr.reaction_id,
+  pr.post_id
+FROM PostReactions pr
+JOIN Reactions r on r.id = pr.reaction_id
+GROUP BY pr.reaction_id
+
+SELECT 
+  *,
+  COUNT(reaction_id)
+FROM PostReactions pr
+JOIN Reactions r on r.id = pr.reaction_id
+WHERE post_id = 1
+GROUP BY pr.reaction_id
+
+SELECT
+      r.id,
+      r.label,
+      r.image_url
+    FROM Reactions r
