@@ -1,3 +1,4 @@
+from models import post
 from reactions.request import add_reaction, create_reaction
 from comments.request import delete_comment, update_comment
 import json
@@ -16,7 +17,13 @@ from posts import ( get_posts_by_user_id,
                     get_posts_by_tag_id,
                     get_posts_by_title_search )
 from comments import create_comment, get_all_comments
-from users import register_new_user, existing_user_check, get_all_users, get_user_by_id, deactivate_user, activate_user
+from users import (register_new_user, 
+                    existing_user_check, 
+                    get_all_users, 
+                    get_user_by_id, 
+                    change_active_status,
+                    change_user_type, 
+                    get_users_by_profile_type)
 from categories import get_all_categories, create_category, delete_category, update_category
 from tags import create_tag, get_all_tags, delete_tag, update_tag
 
@@ -104,6 +111,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             ( resource, key, value ) = parsed
             if key == "user_id" and resource == "posts":
                 response = get_posts_by_user_id(value)
+            elif key.lower() == "isadmin" and resource == "users":
+                response = get_users_by_profile_type(value)
             elif key == "category_id" and resource == "posts":
                 response = get_posts_by_category_id(value)
             elif key == "tag_id" and resource == "posts":
@@ -151,10 +160,10 @@ class HandleRequests(BaseHTTPRequestHandler):
             success = update_tag(id, post_body)
         elif resource == "comments":
             success = update_comment(id, post_body)
-        if resource == "deactivate":
-            success = deactivate_user(id)
-        if resource == "activate":
-            success = activate_user(id)
+        if resource == "active_status":
+            success = change_active_status(id)
+        if resource == "user_type":
+            success = change_user_type(post_body)
         elif resource == "categories":
             success = update_category(id, post_body)
         elif resource == "posts":
@@ -179,6 +188,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
         if resource == "approve":
             success = approve_post(id)
+        if resource == "users":
+            success = change_user_type(id, post_body)
         if resource == "unsubscribe":
             success = unsubscribing_to_post(post_body)
         # rest of the elif's
