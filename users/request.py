@@ -153,8 +153,25 @@ def get_user_by_id(id):
                     is_admin = data["is_admin"],
                     profile_image_url = data["profile_image_url"],
                     active = data["active"])
+
+        user = user.__dict__
+                    
+        db_cursor.execute(""" 
+        SELECT
+            s.id
+        FROM Subscriptions s
+        WHERE author_id = ? and ended_on = ""
+        """, (id,))
+
+        subscription_dataset = db_cursor.fetchall()
+
+        subscriber_count = []
+
+        for subscription_id in subscription_dataset:
+            subscriber_count.append(subscription_id)
+        user["subscribers"] = len(subscriber_count)
         
-        return json.dumps(user.__dict__)
+        return json.dumps(user)
 
 def change_active_status(id):
     with sqlite3.connect("./rare.db") as conn:
