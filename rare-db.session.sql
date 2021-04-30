@@ -30,6 +30,9 @@ CREATE TABLE "DemotionQueue" (
   PRIMARY KEY (action, admin_id, approver_one_id)
 );
 
+INSERT INTO DemotionQueue
+VALUES ("Demote", 1, 2);
+
 
 CREATE TABLE "Subscriptions" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -130,4 +133,12 @@ SELECT
             s.follower_id
         FROM Users u
         JOIN Subscriptions s
-        WHERE user_id = 1 and s.author_id = 1 and s.ended_on = ""
+        WHERE user_id = 1 and s.author_id = 1 and s.ended_on = "";
+
+SELECT COUNT(*)
+                FROM DemotionQueue
+                WHERE admin_id = 1;
+
+SELECT COUNT(*), approver_one_id
+                FROM DemotionQueue
+                WHERE admin_id = 1;
