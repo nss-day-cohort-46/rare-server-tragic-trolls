@@ -14,7 +14,8 @@ from posts import ( get_posts_by_user_id,
                     get_subscribed_posts_by_id,
                     unsubscribing_to_post,
                     get_posts_by_category_id,
-                    get_posts_by_tag_id )
+                    get_posts_by_tag_id,
+                    get_posts_by_title_search )
 from comments import create_comment, get_all_comments
 from users import (register_new_user, 
                     existing_user_check, 
@@ -118,14 +119,16 @@ class HandleRequests(BaseHTTPRequestHandler):
         # `/resource?parameter=value`
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
-            if key == "userId" and resource == "posts":
+            if key == "user_id" and resource == "posts":
                 response = get_posts_by_user_id(value)
-            if key.lower() == "isadmin" and resource == "users":
+            elif key.lower() == "isadmin" and resource == "users":
                 response = get_users_by_profile_type(value)
-            elif key == "categoryId" and resource == "posts":
+            elif key == "category_id" and resource == "posts":
                 response = get_posts_by_category_id(value)
-            elif key == "tagId" and resource == "posts":
+            elif key == "tag_id" and resource == "posts":
                 response = get_posts_by_tag_id(value)
+            elif key == "q" and resource == "posts":
+                response = get_posts_by_title_search(value)
         self.wfile.write(response.encode())
 
     def do_POST(self):
@@ -176,13 +179,15 @@ class HandleRequests(BaseHTTPRequestHandler):
         elif resource == "posts":
             success = update_post(id, post_body)
         # rest of the elif's
+        self.wfile.write("".encode())
 
-        if success:
+        if success == True:
             self._set_headers(204)
+        elif success == False:
+            self._set_headers(404)
         else:
             self._set_headers(404)
-
-        self.wfile.write("".encode())
+            self.wfile.write(success.encode())
 
     def do_PATCH(self):
         content_len = int(self.headers.get('content-length', 0))
