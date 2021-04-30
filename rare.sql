@@ -206,3 +206,28 @@ INSERT INTO Users
   ('id', 'first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on', 'active', 'is_admin')
 VALUES  
   (6, 'sixth', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, False);
+
+
+SELECT
+    p.id,
+    p.user_id,
+    p.category_id,
+    p.title,
+    p.publication_date,
+    p.image_url,
+    p.content,
+    p.approved,
+    c.id as the_category_id,
+    c.label,
+    u.id as the_user_id,
+    u.first_name,
+    u.last_name,
+    u.display_name,
+    u.is_admin,
+    u.active
+FROM posts p
+left JOIN categories c 
+    ON p.category_id = the_category_id
+left JOIN users u
+    ON p.user_id = the_user_id
+WHERE title LIKE "%first%"

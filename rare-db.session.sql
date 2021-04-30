@@ -30,6 +30,9 @@ CREATE TABLE "DemotionQueue" (
   PRIMARY KEY (action, admin_id, approver_one_id)
 );
 
+INSERT INTO DemotionQueue
+VALUES ("Demote", 1, 2);
+
 
 CREATE TABLE "Subscriptions" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -115,6 +118,7 @@ INSERT INTO users
         VALUES
             ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'Wednesday, April 28, 2021', 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png', FALSE, FALSE);
 
+<<<<<<< HEAD
 DROP TABLE Comments
 
 SELECT 
@@ -145,3 +149,29 @@ FROM PostReactions pr
 JOIN Reactions r on r.id = pr.reaction_id
 WHERE post_id = 1
 GROUP BY pr.reaction_id
+=======
+SELECT * from Subscriptions;
+
+SELECT
+            u.id user_id,
+            u.first_name,
+            u.last_name,
+            u.profile_image_url,
+            u.display_name,
+            u.email,
+            u.created_on created_user_on,
+            u.is_admin,
+            u.active,
+            s.follower_id
+        FROM Users u
+        JOIN Subscriptions s
+        WHERE user_id = 1 and s.author_id = 1 and s.ended_on = "";
+
+SELECT COUNT(*)
+                FROM DemotionQueue
+                WHERE admin_id = 1;
+
+SELECT COUNT(*), approver_one_id
+                FROM DemotionQueue
+                WHERE admin_id = 1;
+>>>>>>> 986929db2c9923dc41c9982f26e1065573cec59d
