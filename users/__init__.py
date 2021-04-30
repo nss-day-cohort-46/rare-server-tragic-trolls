@@ -4,4 +4,5 @@ from .request import (change_active_status,
                         get_all_users,
                         get_user_by_id,
                         change_user_type,
-                        get_users_by_profile_type)
+                        get_users_by_profile_type,
+                        check_subscribed)

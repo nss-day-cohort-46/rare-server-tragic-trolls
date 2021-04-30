@@ -22,7 +22,7 @@ VALUES
   ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, False);
 
 DELETE FROM Users
-WHERE id = 1;
+WHERE id = 8;
 
 SELECT * FROM users;
 
@@ -48,12 +48,12 @@ CREATE TABLE "Subscriptions" (
   "follower_id" INTEGER,
   "author_id" INTEGER,
   "created_on" date,
+  "ended_on" date,
   FOREIGN KEY(`follower_id`) REFERENCES `Users`(`id`),
   FOREIGN KEY(`author_id`) REFERENCES `Users`(`id`)
 );
 
-ALTER TABLE Subscriptions ADD COLUMN "ended_on" DATE;
-
+DROP TABLE Subscriptions;
 CREATE TABLE "Posts" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "user_id" INTEGER,
@@ -231,3 +231,4 @@ left JOIN categories c
 left JOIN users u
     ON p.user_id = the_user_id
 WHERE title LIKE "%first%"
+
