@@ -18,12 +18,14 @@ CREATE TABLE "DemotionQueue" (
   "admin_id" INTEGER,
   "approver_one_id" INTEGER,
   FOREIGN KEY(`admin_id`) REFERENCES `Users`(`id`),
-  FOREIGN KEY(`approver_one_id`) REFERENCES `Users`(`id`),
-  PRIMARY KEY (action, admin_id, approver_one_id)
+  FOREIGN KEY(`approver_one_id`) REFERENCES `Users`(`id`)
 );
 
-INSERT INTO DemotionQueue
-VALUES ("Demote", 1, 2);
+DROP TABLE DemotionQueue;
+
+INSERT INTO DemotionQueue VALUES (NULL, "demote", 1, 2);
+INSERT INTO DemotionQueue VALUES (NULL, "deactivate", 1, 2);
+
 
 
 CREATE TABLE "Subscriptions" (
@@ -114,7 +116,6 @@ INSERT INTO users
         VALUES
             ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'Wednesday, April 28, 2021', 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png', FALSE, TRUE);
 
-<<<<<<< HEAD
 
         SELECT 
             pr.id,
@@ -126,8 +127,7 @@ INSERT INTO users
         FROM PostReactions pr
         JOIN Reactions r ON r.id = pr.reaction_id
         WHERE pr.post_id = 1
-=======
-<<<<<<< HEAD
+
 DROP TABLE Comments
 
 SELECT 
@@ -157,8 +157,8 @@ SELECT
 FROM PostReactions pr
 JOIN Reactions r on r.id = pr.reaction_id
 WHERE post_id = 1
-GROUP BY pr.reaction_id
-=======
+GROUP BY pr.reaction_id;
+
 SELECT * from Subscriptions;
 
 SELECT
@@ -182,6 +182,10 @@ SELECT COUNT(*)
 
 SELECT COUNT(*), approver_one_id
                 FROM DemotionQueue
+                WHERE admin_id = 1
+                GROUP BY admin_id;
+
+SELECT *
+FROM DemotionQueue;
                 WHERE admin_id = 1;
->>>>>>> 986929db2c9923dc41c9982f26e1065573cec59d
->>>>>>> main
+
