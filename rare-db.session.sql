@@ -13,14 +13,6 @@ CREATE TABLE "Users" (
   "is_admin" bit
 );
 
-DROP TABLE Users;
-
-INSERT INTO Users
-VALUES 
-( NULL, "test", "user", "test@user.com", "test", "test@user.com",
-  "bio", "password", "", "2020-01-03", TRUE, FALSE
-);
-
 CREATE TABLE "DemotionQueue" (
   "action" varchar,
   "admin_id" INTEGER,
@@ -73,6 +65,8 @@ CREATE TABLE "Reactions" (
   "image_url" varchar
 );
 
+DROP TABLE PostReactions;
+
 CREATE TABLE "PostReactions" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "user_id" INTEGER,
@@ -96,6 +90,8 @@ CREATE TABLE "PostTags" (
   FOREIGN KEY(`tag_id`) REFERENCES `Tags`(`id`)
 );
 
+DROP TABLE Categories;
+
 CREATE TABLE "Categories" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "label" varchar
@@ -103,7 +99,7 @@ CREATE TABLE "Categories" (
 
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
-INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
+INSERT INTO Reactions ('label', 'image_url') VALUES ('what', 'https://pngtree.com/so/happy');
 INSERT INTO Users ('first_name', 'last_name', 'email', 'bio', 'username', 'password', 'profile_image_url', 'created_on', 'active') VALUES ('phil', 'phan', 'a@b.c', 'it me', 'philphan', 'password', 'https://pngtree.com/so/happy', '2020-01-01', 1);
 INSERT INTO Posts ('user_id', 'category_id', 'title', 'publication_date', 'image_url', 'content', 'approved') VALUES (1, 1, 'new post', '2021-01-01', 'https://pngtree.com/so/happy', 'testing post', 1)
 INSERT INTO comments ('post_id', 'author_id', 'content', 'subject', 'created_on') VALUES (1, 1, 'test', 'test', '2021-01-01');
@@ -118,7 +114,50 @@ UPDATE Users
 INSERT INTO users
             ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'created_on', 'profile_image_url', 'is_admin', 'active')
         VALUES
-            ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'Wednesday, April 28, 2021', 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png', FALSE, FALSE);
+            ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'Wednesday, April 28, 2021', 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png', FALSE, TRUE);
+
+
+        SELECT 
+            pr.id,
+            pr.user_id,
+            pr.reaction_id,
+            pr.post_id,
+            r.label,
+            r.image_url
+        FROM PostReactions pr
+        JOIN Reactions r ON r.id = pr.reaction_id
+        WHERE pr.post_id = 1
+
+DROP TABLE Comments
+
+SELECT 
+  COUNT(reaction_id),
+  pr.id,
+  pr.user_id,
+  pr.reaction_id,
+  pr.post_id
+FROM PostReactions pr
+JOIN Posts p on p.id = pr.post_id
+WHERE p.id = 1
+GROUP BY pr.reaction_id
+
+SELECT 
+  COUNT(reaction_id),
+  pr.id,
+  pr.user_id,
+  pr.reaction_id,
+  pr.post_id
+FROM PostReactions pr
+JOIN Reactions r on r.id = pr.reaction_id
+GROUP BY pr.reaction_id
+
+SELECT 
+  *,
+  COUNT(reaction_id)
+FROM PostReactions pr
+JOIN Reactions r on r.id = pr.reaction_id
+WHERE post_id = 1
+GROUP BY pr.reaction_id;
 
 SELECT * from Subscriptions;
 
@@ -148,3 +187,5 @@ SELECT COUNT(*), approver_one_id
 
 SELECT *
 FROM DemotionQueue;
+                WHERE admin_id = 1;
+
