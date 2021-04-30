@@ -22,7 +22,7 @@ VALUES
   ('test', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, False);
 
 DELETE FROM Users
-WHERE id = 1;
+WHERE id = 8;
 
 SELECT * FROM users;
 
@@ -206,3 +206,6 @@ INSERT INTO Users
   ('id', 'first_name', 'last_name', 'email', 'bio', 'username', 'password', 'created_on', 'active', 'is_admin')
 VALUES  
   (6, 'sixth', 'user', 'test@user.com', 'bio', 'test@user.com', 'password', '12/31/2020', True, False);
+
+SELECT * FROM subscriptions 
+        Where follower_id =  and author_id = ? and ended_on = ""
