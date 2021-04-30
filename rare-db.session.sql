@@ -142,3 +142,6 @@ SELECT COUNT(*)
 SELECT COUNT(*), approver_one_id
                 FROM DemotionQueue
                 WHERE admin_id = 1;
+
+SELECT *
+FROM DemotionQueue;

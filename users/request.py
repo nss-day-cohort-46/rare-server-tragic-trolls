@@ -174,51 +174,124 @@ def get_user_by_id(id):
         return json.dumps(user)
 
 def change_active_status(user_body):
+    # with sqlite3.connect("./rare.db") as conn:
+    #     conn.row_factory = sqlite3.Row
+    #     db_cursor = conn.cursor()
+
+    #     rows_affected = None
+
+    #     user_to_change = json.loads(get_user_by_id(id))
+
+    #     if user_to_change["active"] and user_to_change["isAdmin"] == True:
+    #         db_cursor.execute(""" 
+    #         SELECT
+    #             u.id
+    #         FROM users u
+    #         WHERE is_admin = True and active = True
+    #         """)
+    #         dataset = db_cursor.fetchall()
+
+    #         admin_users = []
+
+    #         for row in dataset:
+    #             admin_users.append(row["id"])
+
+    #         if len(admin_users) == 1:
+    #             return "Error: Must have at least one active admin user at all times"
+
+    #         else:
+    #             db_cursor.execute(""" 
+    #             UPDATE Users
+    #             SET active = NOT active
+    #             WHERE id = ?
+    #             """, (id,))
+
+    #             rows_affected = db_cursor.rowcount
+    #     else:        
+    #         db_cursor.execute(""" 
+    #         UPDATE Users
+    #         SET active = NOT active
+    #         WHERE id = ?
+    #         """, (id,))
+
+    #         rows_affected = db_cursor.rowcount
+
+    #     if rows_affected > 0:
+    #         return True
+    #     else: 
+    #         return False
     with sqlite3.connect("./rare.db") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
         rows_affected = None
 
-        user_to_change = json.loads(get_user_by_id(id))
+        user_to_change = json.loads(get_user_by_id(int(user_body["user_id"])))
 
-        if user_to_change["active"] and user_to_change["isAdmin"] == True:
-            db_cursor.execute(""" 
-            SELECT
-                u.id
-            FROM users u
-            WHERE is_admin = True and active = True
-            """)
-            dataset = db_cursor.fetchall()
+        if user_body["user_id"] != user_body["approver_one_id"]:
+            if user_to_change["active"] == True:
+                db_cursor.execute(""" 
+                SELECT COUNT(*), approver_one_id, action
+                FROM DemotionQueue
+                WHERE admin_id = ?
+                """, (user_to_change["id"],))
 
-            admin_users = []
+                dataset = db_cursor.fetchall()
+                count = dataset[0][0]
+                row_actions = []
 
-            for row in dataset:
-                admin_users.append(row["id"])
+                if count != 0:
+                    for row in dataset:
+                        row_actions.append(row["action"])
 
-            if len(admin_users) == 1:
-                return "Error: Must have at least one active admin user at all times"
+                    if "deactivate" in row_actions:
+                        if int(user_body["approver_one_id"]) != row["approver_one_id"]:
+                            db_cursor.execute(""" 
+                            UPDATE Users
+                            SET active = NOT active
+                            WHERE id = ?
+                            """, (int(user_body["user_id"]),))
+
+                            db_cursor.execute(""" 
+                            DELETE FROM DemotionQueue
+                            WHERE admin_id = ? and action = "deactivate"
+                            """, (user_to_change["id"],))
+
+                            return True
+                        else:
+                            return "Deactivating an admin user requires approval from 2 separate admin users"
+                    else:
+                        db_cursor.execute(""" 
+                        INSERT INTO DemotionQueue
+                        (action, admin_id, approver_one_id)
+                        VALUES (?,?,?)
+                        """, (user_body["action"], int(user_body["user_id"]), int(user_body["approver_one_id"])))
+
+                        return True
+                else:
+                    # create new demotionqueue
+                    db_cursor.execute(""" 
+                    INSERT INTO DemotionQueue
+                        (action, admin_id, approver_one_id)
+                    VALUES (?,?,?)
+                    """, (user_body["action"], int(user_body["user_id"]), int(user_body["approver_one_id"])))
+
+                    return True
 
             else:
                 db_cursor.execute(""" 
                 UPDATE Users
                 SET active = NOT active
                 WHERE id = ?
-                """, (id,))
+                """, (int(user_body["user_id"]),))
 
                 rows_affected = db_cursor.rowcount
-        else:        
-            db_cursor.execute(""" 
-            UPDATE Users
-            SET active = NOT active
-            WHERE id = ?
-            """, (id,))
-
-            rows_affected = db_cursor.rowcount
+        else:
+            return "Error: Admin cannot approve their own status change"
 
         if rows_affected > 0:
             return True
-        else: 
+        else:
             return False
         
 def change_user_type(user_body):
@@ -240,26 +313,36 @@ def change_user_type(user_body):
 
                 dataset = db_cursor.fetchall()
                 count = dataset[0][0]
-                rows = []
+                row_actions = []
 
                 if count != 0:
                     for row in dataset:
-                        if row["action"] == "demote":
-                            if int(user_body["approver_one_id"]) != row["approver_one_id"]:
-                                db_cursor.execute(""" 
-                                UPDATE Users
-                                SET is_admin = NOT is_admin
-                                WHERE id = ?
-                                """, (int(user_body["user_id"]),))
+                        row_actions.append(row["action"])
 
-                                db_cursor.execute(""" 
-                                DELETE FROM DemotionQueue
-                                WHERE admin_id = ?
-                                """, (user_to_change["id"],))
+                    if "demote" in row_actions:
+                        if int(user_body["approver_one_id"]) != row["approver_one_id"]:
+                            db_cursor.execute(""" 
+                            UPDATE Users
+                            SET is_admin = NOT is_admin
+                            WHERE id = ?
+                            """, (int(user_body["user_id"]),))
 
-                                return True
-                            else:
-                                return "Demoting an admin user requires approval from 2 separate admin users"
+                            db_cursor.execute(""" 
+                            DELETE FROM DemotionQueue
+                            WHERE admin_id = ? and action = "demote"
+                            """, (user_to_change["id"],))
+
+                            return True
+                        else:
+                            return "Demoting an admin user requires approval from 2 separate admin users"
+                    else:
+                        db_cursor.execute(""" 
+                        INSERT INTO DemotionQueue
+                        (action, admin_id, approver_one_id)
+                        VALUES (?,?,?)
+                        """, (user_body["action"], int(user_body["user_id"]), int(user_body["approver_one_id"])))
+
+                        return True
                 else:
                     # create new demotionqueue
                     db_cursor.execute(""" 
