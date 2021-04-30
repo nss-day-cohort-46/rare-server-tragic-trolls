@@ -22,16 +22,19 @@ VALUES
 );
 
 CREATE TABLE "DemotionQueue" (
+  "id"  INTEGER PRIMARY KEY AUTOINCREMENT,
   "action" varchar,
   "admin_id" INTEGER,
   "approver_one_id" INTEGER,
   FOREIGN KEY(`admin_id`) REFERENCES `Users`(`id`),
-  FOREIGN KEY(`approver_one_id`) REFERENCES `Users`(`id`),
-  PRIMARY KEY (action, admin_id, approver_one_id)
+  FOREIGN KEY(`approver_one_id`) REFERENCES `Users`(`id`)
 );
 
-INSERT INTO DemotionQueue
-VALUES ("Demote", 1, 2);
+DROP TABLE DemotionQueue;
+
+INSERT INTO DemotionQueue VALUES (NULL, "demote", 1, 2);
+INSERT INTO DemotionQueue VALUES (NULL, "deactivate", 1, 2);
+
 
 
 CREATE TABLE "Subscriptions" (
@@ -141,7 +144,8 @@ SELECT COUNT(*)
 
 SELECT COUNT(*), approver_one_id
                 FROM DemotionQueue
-                WHERE admin_id = 1;
+                WHERE admin_id = 1
+                GROUP BY admin_id;
 
 SELECT *
 FROM DemotionQueue;
