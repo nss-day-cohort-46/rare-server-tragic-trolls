@@ -22,7 +22,6 @@ VALUES
 );
 
 CREATE TABLE "DemotionQueue" (
-  "id"  INTEGER PRIMARY KEY AUTOINCREMENT,
   "action" varchar,
   "admin_id" INTEGER,
   "approver_one_id" INTEGER,
