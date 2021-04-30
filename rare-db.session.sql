@@ -68,6 +68,8 @@ CREATE TABLE "Reactions" (
   "image_url" varchar
 );
 
+DROP TABLE PostReactions;
+
 CREATE TABLE "PostReactions" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "user_id" INTEGER,
@@ -116,6 +118,8 @@ INSERT INTO Reactions ('label', 'image_url')
 VALUES ('YeeHaw', 'https://res.cloudinary.com/nicecloudbro/image/upload/v1619711464/yeehaw_gft31j.png');
 INSERT INTO Reactions ('label', 'image_url')
 VALUES ('YeeNah', 'https://res.cloudinary.com/nicecloudbro/image/upload/v1619711737/yeenah_cs7dwm.png');
+INSERT INTO Reactions ('label', 'image_url')
+VALUES ('TwoFingersTouch', 'https://res.cloudinary.com/nicecloudbro/image/upload/v1619711762/twofingerstouch_tu86cq.png');
 INSERT INTO PostReactions ('user_id', 'reaction_id', 'post_id')
 VALUES (1, 1, 1);
 INSERT INTO PostReactions ('user_id', 'reaction_id', 'post_id')
@@ -138,39 +142,14 @@ INSERT INTO users
         VALUES
             ('first_name', 'last_name', 'display_name', 'email', 'bio', 'username', 'password', 'Wednesday, April 28, 2021', 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png', FALSE, FALSE);
 
-DROP TABLE Comments
 
-SELECT 
-  COUNT(reaction_id),
-  pr.id,
-  pr.user_id,
-  pr.reaction_id,
-  pr.post_id
-FROM PostReactions pr
-JOIN Posts p on p.id = pr.post_id
-WHERE p.id = 1
-GROUP BY pr.reaction_id
-
-SELECT 
-  COUNT(reaction_id),
-  pr.id,
-  pr.user_id,
-  pr.reaction_id,
-  pr.post_id
-FROM PostReactions pr
-JOIN Reactions r on r.id = pr.reaction_id
-GROUP BY pr.reaction_id
-
-SELECT 
-  *,
-  COUNT(reaction_id)
-FROM PostReactions pr
-JOIN Reactions r on r.id = pr.reaction_id
-WHERE post_id = 1
-GROUP BY pr.reaction_id
-
-SELECT
-      r.id,
-      r.label,
-      r.image_url
-    FROM Reactions r
+        SELECT 
+            pr.id,
+            pr.user_id,
+            pr.reaction_id,
+            pr.post_id,
+            r.label,
+            r.image_url
+        FROM PostReactions pr
+        JOIN Reactions r ON r.id = pr.reaction_id
+        WHERE pr.post_id = 1
