@@ -3,3 +3,5 @@ from .comment import Comment
 from .user import User
 from .tag import Tag
 from .category import Category
+from .reaction import Reaction
+from .postreaction import Post_Reaction

@@ -1,5 +1,5 @@
 from models import post
-from reactions.request import add_reaction, create_reaction
+from reactions.request import add_reaction, create_reaction, get_all_reactions, get_postreactions_by_id
 from comments.request import delete_comment, update_comment
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -102,6 +102,16 @@ class HandleRequests(BaseHTTPRequestHandler):
             elif resource == "subscriptions":
                 if id is not None:
                     response = get_subscribed_posts_by_id(id)
+                else:
+                    pass
+            elif resource == "reactions":
+                if id is not None:
+                    pass
+                else:
+                    response = get_all_reactions()
+            elif resource == "postreactions":
+                if id is not None:
+                    response = get_postreactions_by_id(id)
                 else:
                     pass
         # Response from parse_url() is a tuple with 3

@@ -1,3 +1,4 @@
+from models.reaction import Reaction
 import sqlite3
 import json
 from models import Post, Tag, Comment, Category, User
@@ -242,6 +243,28 @@ def get_post_by_id(id):
                         tag_row['label'])
             post_tags.append(post_tag.__dict__)
         post.tags = post_tags
+        db_cursor.execute("""
+        SELECT 
+            pr.id,
+            pr.user_id,
+            pr.reaction_id,
+            pr.post_id,
+            r.label,
+            r.image_url,
+            COUNT(reaction_id) count
+        FROM PostReactions pr
+        JOIN Reactions r ON r.id = pr.reaction_id
+        WHERE pr.post_id = ?
+        GROUP BY reaction_id
+        """, (single_post['id'], ))
+        post_reactions = []
+        dataset = db_cursor.fetchall()
+        for data in dataset:
+            post_reaction = Reaction(data['reaction_id'], data['label'], data['image_url'])
+            post_reaction.count = data['count']
+            post_reactions.append(post_reaction.__dict__)
+        post.reactions = post_reactions
+
         db_cursor.execute("""
         SELECT
             c.id,
