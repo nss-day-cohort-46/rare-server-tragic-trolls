@@ -184,7 +184,7 @@ def change_active_status(user_body):
         user_to_change = json.loads(get_user_by_id(int(user_body["user_id"])))
 
         if user_body["user_id"] != user_body["approver_one_id"]:
-            if user_to_change["active"] == True:
+            if user_to_change["active"] == True and user_to_change["is_admin"] == True:
                 db_cursor.execute(""" 
                 SELECT approver_one_id, action
                 FROM DemotionQueue
