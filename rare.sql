@@ -1,3 +1,14 @@
+DROP TABLE Users;
+DROP TABLE Categories;
+DROP TABLE Comments;
+DROP TABLE DemotionQueue;
+DROP TABLE PostReactions;
+DROP TABLE PostTags;
+DROP TABLE Posts;
+DROP TABLE Reactions;
+DROP TABLE Subscriptions;
+DROP TABLE Tags;
+
 CREATE TABLE "Users" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "first_name" varchar,
@@ -15,13 +26,14 @@ CREATE TABLE "Users" (
 
 INSERT INTO Users
 (id, first_name, last_name, username, display_name, email, bio, password, profile_image_url, created_on, active, is_admin)
-VALUES (NULL, "Kaitlin", "Kelley", "kaitlin@kaitlin.com", "Kaitlin", "kaitlin@kaitlin.com", "I am admin", "password", "http://localhost:3000/static/media/image.f1ad323e.png", "Friday, April 30, 2021", True, True),
-  (NULL, "Jake", "Froeb", "jake@jake.com", "Jake", "jake@jake.com", "I am admin", "password", "http://localhost:3000/static/media/image.f1ad323e.png", "Friday, April 30, 2021", True, True),
-  (NULL, "Phillip", "Phan", "phillip@phillip.com", "Phillip", "phillip@phillip.com", "I am admin", "password", "http://localhost:3000/static/media/image.f1ad323e.png", "Friday, April 30, 2021", True, True),
-  (NULL, "Nick", "Carver", "nick@nick.com", "Nick", "nick@nick.com", "I am admin", "password", "http://localhost:3000/static/media/image.f1ad323e.png", "Friday, April 30, 2021", True, True),
-  (NULL, "Admin", "User", "admin@admin.com", "Admin", "admin@admin.com", "I am admin", "password", "http://localhost:3000/static/media/image.f1ad323e.png", "Friday, April 30, 2021", True, True);
+VALUES (NULL, "Kaitlin", "Kelley", "kaitlin@kaitlin.com", "Kaitlin", "kaitlin@kaitlin.com", "I am admin", "password", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", "Friday, April 30, 2021", True, True),
+  (NULL, "Jake", "Froeb", "jake@jake.com", "Jake", "jake@jake.com", "I am admin", "password", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", "Friday, April 30, 2021", True, True),
+  (NULL, "Phillip", "Phan", "phillip@phillip.com", "Phillip", "phillip@phillip.com", "I am admin", "password", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", "Friday, April 30, 2021", True, True),
+  (NULL, "Nick", "Carver", "nick@nick.com", "Nick", "nick@nick.com", "I am admin", "password", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", "Friday, April 30, 2021", True, True),
+  (NULL, "Admin", "User", "admin@admin.com", "Admin", "admin@admin.com", "I am admin", "password", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", "Friday, April 30, 2021", True, True);
 
 CREATE TABLE "DemotionQueue" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "action" varchar,
   "admin_id" INTEGER,
   "approver_one_id" INTEGER,
@@ -34,6 +46,7 @@ CREATE TABLE "Subscriptions" (
   "follower_id" INTEGER,
   "author_id" INTEGER,
   "created_on" date,
+  "ended_on" date,
   FOREIGN KEY(`follower_id`) REFERENCES `Users`(`id`),
   FOREIGN KEY(`author_id`) REFERENCES `Users`(`id`)
 );
@@ -46,7 +59,9 @@ CREATE TABLE "Posts" (
   "publication_date" date,
   "image_url" varchar,
   "content" varchar,
-  "approved" bit
+  "approved" bit,
+  FOREIGN KEY (`user_id`) REFERENCES `Users`(`id`),
+  FOREIGN KEY (`category_id`) REFERENCES `Categories`(`id`)
 );
 
 CREATE TABLE "Comments" (
