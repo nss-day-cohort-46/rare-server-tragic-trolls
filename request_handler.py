@@ -161,7 +161,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         elif resource == "comments":
             success = update_comment(id, post_body)
         if resource == "active_status":
-            success = change_active_status(id)
+            success = change_active_status(post_body)
         if resource == "user_type":
             success = change_user_type(post_body)
         elif resource == "categories":
